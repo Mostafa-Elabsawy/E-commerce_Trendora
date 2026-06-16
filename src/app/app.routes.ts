@@ -1,8 +1,9 @@
 import { Routes } from '@angular/router';
 export const routes: Routes = [
+  {
+    path: '/',
+  },
     {
-        path: '/',
-        
+        path: '/sign-in'
     },
-    { path: '/sign-in' }
 ];

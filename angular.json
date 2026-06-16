@@ -12,13 +12,16 @@
 
       "schematics": {
         "@schematics/angular:component": {
-          "type": "component"
+          "type": "component",
+          "skip-tests": true
         },
         "@schematics/angular:service": {
-          "type": "service"
+          "type": "service",
+          "skip-tests": true
         },
         "@schematics/angular:interface": {
-          "type": "interface"
+          "type": "interface",
+          "skip-tests": true
         }
       },
       "root": "",
