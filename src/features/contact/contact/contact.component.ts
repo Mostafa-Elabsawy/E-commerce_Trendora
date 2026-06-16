@@ -3,9 +3,9 @@ import { FooterComponent } from '../../../shared/components/footer/footer/footer
 import { HeaderComponent } from '../../../shared/components/header/header/header.component';
 
 @Component({
-  selector: 'app-about',
+  selector: 'app-contact',
   imports: [HeaderComponent, FooterComponent],
-  templateUrl: './about.component.html',
-  styleUrl: './about.component.css',
+  templateUrl: './contact.component.html',
+  styleUrl: './contact.component.css',
 })
-export class AboutComponent {}
+export class ContactComponent {}

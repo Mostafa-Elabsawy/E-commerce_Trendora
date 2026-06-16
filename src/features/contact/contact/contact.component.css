@@ -2,15 +2,14 @@
   display: block;
 }
 
-.about-page {
+.contact-page {
   max-width: 1200px;
   margin: 0 auto;
   padding: 3rem 1rem;
   color: #1f2937;
 }
 
-.about-title,
-.section-heading {
+.section-header {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -19,107 +18,72 @@
   margin-bottom: 2.5rem;
 }
 
-.about-title span,
-.section-heading span {
-  display: block;
-  width: 56px;
+.section-header span {
+  width: 64px;
   height: 3px;
   background: #111827;
   border-radius: 9999px;
 }
 
-.about-title h1,
-.section-heading h2 {
+.section-header h1 {
   font-size: clamp(2rem, 2.5vw, 3rem);
   font-weight: 700;
-  letter-spacing: 0.1em;
   margin: 0;
 }
 
-.about-title p {
-  max-width: 720px;
-  color: #475569;
-  font-size: 1rem;
-  line-height: 1.9;
-}
-
-.about-hero {
+.contact-grid {
   display: grid;
-  grid-template-columns: 1fr;
   gap: 2rem;
-  align-items: center;
+  align-items: start;
 }
 
-.hero-image img {
+.contact-image img {
   width: 100%;
-  height: auto;
   display: block;
   border-radius: 1.25rem;
   object-fit: cover;
   box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
 }
 
-.about-content {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-  color: #374151;
-}
-
-.about-content p {
-  margin: 0;
-  line-height: 1.9;
-}
-
-.about-mission {
-  margin-top: 1.25rem;
-  padding: 1.75rem;
-  border-radius: 1.25rem;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-}
-
-.about-mission h2 {
-  margin: 0 0 0.75rem;
-  font-size: 1.125rem;
-  font-weight: 700;
-  color: #111827;
-}
-
-.about-mission p {
-  margin: 0;
-  color: #475569;
-  line-height: 1.9;
-}
-
-.why-choose {
-  margin-top: 3rem;
-}
-
-.why-grid {
+.contact-info {
   display: grid;
-  gap: 1.25rem;
+  gap: 1.5rem;
 }
 
-.why-card {
+.info-block {
   padding: 1.75rem;
-  border: 1px solid #e2e8f0;
   border-radius: 1.25rem;
   background: #ffffff;
+  border: 1px solid #e2e8f0;
 }
 
-.why-card h3 {
+.store-block h2,
+.careers-block h2 {
   margin: 0 0 0.75rem;
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: #111827;
 }
 
-.why-card p {
+.store-address,
+.store-contact,
+.careers-block p {
   margin: 0;
   color: #475569;
-  line-height: 1.9;
+  line-height: 1.8;
 }
+
+.careers-block button {
+  margin-top: 1rem;
+  padding: 0.85rem 1.5rem;
+  border: 1px solid #111827;
+  background: transparent;
+  color: #111827;
+  border-radius: 9999px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 .newsletter-card {
   margin: 6rem auto 4rem auto;
   padding: 3rem;
@@ -175,12 +139,13 @@
 footer{
     margin-top: 3rem;
 }
+
 @media (min-width: 768px) {
-  .about-hero {
+  .contact-grid {
     grid-template-columns: 1fr 1fr;
   }
 
-  .why-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  .contact-info {
+    grid-template-columns: 1fr;
   }
 }
