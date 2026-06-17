@@ -1,0 +1,39 @@
+<section class="min-h-screen py-10 px-4 bg-white font-Prata">
+    <div class="sign-up text-center mt-20">
+        <div class="header flex items-center justify-center gap-2">
+            <p class="text-4xl  ">Sign Up </p>
+            <span class="block h-px w-12 border  border-black"></span>
+        </div>
+        <form class="w-full max-w-md xl:max-w-sm mx-auto mt-8 flex flex-col gap-4 font-outfit" [formGroup]="signUpForm" (ngSubmit)="onSubmit()">
+            <div class="relative w-full form-field">
+                <input type="text" formControlName="name" placeholder=" " class="input-base floating" />
+                <label class="floating-label">
+                    Name
+                </label>
+                @if (name.invalid && name.touched ) {
+                <p class="text-red-600 text-start"> <i class="fa-solid fa-circle-exclamation"></i>Name is Required</p>
+                }
+            </div>
+            <div class="relative w-full form-field">
+                <input type="email" formControlName="email" placeholder=" " class="input-base floating" />
+                <label class="floating-label">
+                    Email
+                </label>
+                @if (email.invalid && email.touched ) {
+                <p class="text-red-600 text-start"> <i class="fa-solid fa-circle-exclamation"></i>Enter a valid email </p>
+                }
+            </div>
+            <div class="relative w-full form-field">
+                <input type="password" formControlName="password" placeholder=" " class="input-base floating" />
+                <label class="floating-label">
+                    Password
+                </label>
+                @if (password.invalid && password.touched ) {
+                <p class="text-red-600 text-start"> <i class="fa-solid fa-circle-exclamation"></i>Password is Required</p>
+                }
+            </div>
+            <button type="submit" class="btn-base bg-black text-white">Create Account</button>
+            <h2 class="font-normal">already have an account ? <a routerLink="/login" class=" hover:text-sky-600 hover:underline cursor-pointer">Log in</a></h2>
+        </form>
+    </div>
+</section>
