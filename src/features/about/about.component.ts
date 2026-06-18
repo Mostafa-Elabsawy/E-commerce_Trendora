@@ -6,4 +6,5 @@ import { TitleComponent } from '../title/title.component';
   templateUrl: './about.component.html',
   styleUrl: './about.component.css',
 })
-export class AboutComponent {}
+export class AboutComponent {
+}
