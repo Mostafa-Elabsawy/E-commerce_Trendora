@@ -5,12 +5,17 @@ import { RegisterComponent } from '../core/Auth/register/register.component';
 import { LogInComponent } from '../core/Auth/log-in/log-in.component';
 import { MainComponent } from '../core/layouts/main/main.component';
 import { ProductsComponent } from '../features/products/products.component';
-
 import { HomeComponent } from '../features/home/home.component';
 import { CartComponent } from '../features/cart/cart.component';
+import { AdminMainComponent } from '../admin/layout/admin-main/admin-main.component';
+import { OverviewAdminComponent } from '../admin/pages/overview-admin/overview-admin.component';
+import { CustomersAdminComponent } from '../admin/pages/customers-admin/customers-admin.component';
+import { OrdersAdminComponent } from '../admin/pages/orders-admin/orders-admin.component';
+import { ProductsAdminComponent } from '../admin/pages/products-admin/products-admin.component';
 import { CheckoutComponent } from '../features/checkout/checkout.component';
 import { ProsuctDetailsComponent } from '../features/prosuct-details/prosuct-details.component';
 export const routes: Routes = [
+  {path:'',redirectTo:'admin', pathMatch:'full'},
   {
     path: '',
     component: MainComponent,
@@ -28,4 +33,15 @@ export const routes: Routes = [
       { path: 'checkout', component: CheckoutComponent },
     ],
   },
+  {
+    path: 'admin',
+    component: AdminMainComponent,
+    children: [
+      { path: '', redirectTo: 'overview', pathMatch: 'full' },
+      { path: 'overview', component: OverviewAdminComponent },
+      { path: 'products', component: ProductsAdminComponent },
+      { path: 'customers', component: CustomersAdminComponent },
+      { path: 'orders', component:OrdersAdminComponent },
+    ],
+  }
 ];

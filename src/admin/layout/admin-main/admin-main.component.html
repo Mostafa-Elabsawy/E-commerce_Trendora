@@ -1,0 +1,14 @@
+<div class="flex h-screen bg-white relative overflow-x-hidden">
+    <app-sidebar (closeSidebar)="this.isSidebarOpen.set(false)" class="h-screen lg:sticky fixed z-50 transform transition-transform duration-300 ease-in-out" [ngClass]="isSidebarOpen() ? 'max-lg:translate-x-0' : 'max-lg:-translate-x-full'">
+    </app-sidebar>
+
+    <div class=" w-full flex flex-col  overflow-x-hidden overflow-y-scroll  ">
+
+        <app-navbar  class="sticky top-0 z-10" (toggleSidebar)="toggleSidebar()"></app-navbar>
+
+        <main class="flex-1 p-8 bg-white">
+            <router-outlet></router-outlet>
+        </main>
+
+    </div>
+</div>

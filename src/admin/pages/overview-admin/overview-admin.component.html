@@ -1,0 +1,25 @@
+<div class=" w-full space-y-4">
+
+    <div class="flex flex-col justify-between shadow border border-gray-200 px-4 py-6 rounded-2xl">
+            <h1 class="text-2xl font-bold tracking-tight text-slate-900">Store Performance Overview</h1>
+            <p class="text-sm text-slate-500">Welcome back, Admin. Here is what's happening with your store today.</p>
+    </div>
+
+    <section aria-label="Key Performance Indicators" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    @for (kpi of kpis(); track kpi.label) {
+    <app-kpi [icon]="kpi.icon" [label]="kpi.label" [value]="kpi.value" (cardClick)="handleCardRouting(kpi.route)" />
+    }
+    </section>
+    <section aria-label="Sales Graph Layout">
+        <app-charts></app-charts>
+    </section>
+    <div class="grid grid-cols-1  gap-6 items-start">
+        <section aria-label="Recent Store Purchases Log" class="lg:col-span-2 h-full">
+            <app-recent-orders></app-recent-orders>
+        </section>
+    </div>
+    
+    <!-- <section aria-label="System Inventory Warnings">
+        <app-low-stock-alerts></app-low-stock-alerts>
+    </section> -->
+</div>
