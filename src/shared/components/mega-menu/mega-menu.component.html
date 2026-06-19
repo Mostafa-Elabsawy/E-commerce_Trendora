@@ -1,0 +1,87 @@
+<div class="w-full bg-white border-b border-gray-200 relative font-sans">
+  <div class="max-w-7xl mx-auto px-4 flex items-center gap-6 text-sm font-medium text-gray-700 h-14">
+    @for (category of categories(); track category.id) {
+    <div class="group h-full flex items-center">
+      <button class="text-black font-semibold h-full px-1">
+        {{ category.name }}
+      </button>
+
+      <div
+        class="absolute left-0 top-14 w-full bg-white border-b border-gray-200 shadow-xl hidden group-hover:block z-50 transition-all">
+        <div class="max-w-7xl mx-auto px-6 py-8 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 text-left">
+          @for (subCategory of subCategories(); track subCategory.id) {
+          <div>
+            <h5 class="font-bold text-gray-900 text-sm mb-3">{{ subCategory.name }}</h5>
+            <ul class="flex flex-col gap-2 text-xs text-gray-500">
+              <li><a href="#" class="hover:text-black">Galaxy AI</a></li>
+              <li><a href="#" class="hover:text-black">iPhone 17 Series</a></li>
+              <li><a href="#" class="hover:text-black">Premium Androids</a></li>
+              <li><a href="#" class="hover:text-black">Tablets</a></li>
+              <li><a href="#" class="hover:text-black">Chargers</a></li>
+            </ul>
+          </div>
+          }
+
+          <!-- <div>
+              <h5 class="font-bold text-gray-900 text-sm mb-3">iPhone 17 Series</h5>
+              <ul class="flex flex-col gap-2 text-xs text-gray-500">
+                <li><a href="#" class="hover:text-black">iPhone 17</a></li>
+                <li><a href="#" class="hover:text-black">iPhone 17 Air</a></li>
+                <li><a href="#" class="hover:text-black">iPhone 17 Pro</a></li>
+                <li><a href="#" class="hover:text-black">iPhone 17 Pro Max</a></li>
+              </ul>
+            </div>
+
+            <div>
+              <h5 class="font-bold text-gray-900 text-sm mb-3">Laptops & Accessories</h5>
+              <ul class="flex flex-col gap-2 text-xs text-gray-500">
+                <li><a href="#" class="hover:text-black">MacBooks</a></li>
+                <li><a href="#" class="hover:text-black">Powerful Laptops</a></li>
+                <li><a href="#" class="hover:text-black">Gaming Laptops</a></li>
+                <li><a href="#" class="hover:text-black">Monitors</a></li>
+              </ul>
+            </div>
+
+            <div>
+              <h5 class="font-bold text-gray-900 text-sm mb-3">Gaming Essentials</h5>
+              <ul class="flex flex-col gap-2 text-xs text-gray-500">
+                <li><a href="#" class="hover:text-black">Gaming Consoles</a></li>
+                <li><a href="#" class="hover:text-black">Gaming Accessories</a></li>
+                <li><a href="#" class="hover:text-black">Video Games</a></li>
+              </ul>
+            </div>
+
+            <div>
+              <h5 class="font-bold text-gray-900 text-sm mb-3">TVs & Entertainment</h5>
+              <ul class="flex flex-col gap-2 text-xs text-gray-500">
+                <li><a href="#" class="hover:text-black">LED</a></li>
+                <li><a href="#" class="hover:text-black">OLED</a></li>
+                <li><a href="#" class="hover:text-black">4K Ultra HD</a></li>
+              </ul>
+            </div>
+
+            <div>
+              <h5 class="font-bold text-gray-900 text-sm mb-3">Cameras</h5>
+              <ul class="flex flex-col gap-2 text-xs text-gray-500">
+                <li><a href="#" class="hover:text-black">DSLR Cameras</a></li>
+                <li><a href="#" class="hover:text-black">Action Cameras</a></li>
+                <li><a href="#" class="hover:text-black">Instant Cameras</a></li>
+              </ul>
+            </div> -->
+        </div>
+      </div>
+    </div>
+    }
+
+    <!-- <span class="text-gray-500 hover:text-black cursor-pointer whitespace-nowrap"
+      >Beauty & Fragrance</span
+    >
+    <span class="text-gray-500 hover:text-black cursor-pointer whitespace-nowrap"
+      >Home & Kitchen</span
+    >
+    <span class="text-gray-500 hover:text-black cursor-pointer whitespace-nowrap">Grocery</span>
+    <span class="text-gray-500 hover:text-black cursor-pointer whitespace-nowrap"
+      >Men's Fashion</span
+    > -->
+  </div>
+</div>

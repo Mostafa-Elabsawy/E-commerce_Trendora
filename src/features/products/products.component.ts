@@ -1,16 +1,16 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { TitleComponent } from '../title/title.component';
 import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
-import { IProduct } from '../../core/models/product.interface';
 import { ProductService } from '../../core/services/product.service';
+import { IProduct } from '../../core/models/product.interface';
 
 @Component({
-  selector: 'app-best-sellers',
+  selector: 'app-products',
   imports: [TitleComponent, ProductCardComponent],
-  templateUrl: './best-sellers.component.html',
-  styleUrl: './best-sellers.component.css',
+  templateUrl: './products.component.html',
+  styleUrl: './products.component.css',
 })
-export class BestSellersComponent implements OnInit {
+export class ProductsComponent implements OnInit {
   constructor(private _products: ProductService) { }
   products = signal<IProduct[]>([]);
 
@@ -23,7 +23,7 @@ export class BestSellersComponent implements OnInit {
         this.products.set(res.data);
       },
       error: (err) => {
-        console.error('Failed to load best sellers products:', err);
+        console.error('Failed to load products:', err);
       },
     });
   }
