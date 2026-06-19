@@ -4,8 +4,7 @@ import { ContactComponent } from '../features/contact/contact.component';
 import { RegisterComponent } from '../core/Auth/register/register.component';
 import { LogInComponent } from '../core/Auth/log-in/log-in.component';
 import { MainComponent } from '../core/layouts/main/main.component';
-import { ProductsComponent } from '../features/products/products/products.component';
-import { ChekoutComponent } from '../features/chekout/chekout.component';
+import { ProductsComponent } from '../features/products/products.component';
 import { HomeComponent } from '../features/home/home.component';
 import { CartComponent } from '../features/cart/cart.component';
 import { AdminMainComponent } from '../admin/layout/admin-main/admin-main.component';
@@ -13,6 +12,8 @@ import { OverviewAdminComponent } from '../admin/pages/overview-admin/overview-a
 import { CustomersAdminComponent } from '../admin/pages/customers-admin/customers-admin.component';
 import { OrdersAdminComponent } from '../admin/pages/orders-admin/orders-admin.component';
 import { ProductsAdminComponent } from '../admin/pages/products-admin/products-admin.component';
+import { CheckoutComponent } from '../features/checkout/checkout.component';
+import { ProsuctDetailsComponent } from '../features/prosuct-details/prosuct-details.component';
 export const routes: Routes = [
   {path:'',redirectTo:'admin', pathMatch:'full'},
   {
@@ -26,9 +27,10 @@ export const routes: Routes = [
       { path: 'register', component: RegisterComponent },
       { path: 'home', component: HomeComponent },
       { path: 'collection', component: ProductsComponent },
+      { path: 'productDetails/:id', component: ProsuctDetailsComponent },
       { path: 'products', component: ProductsComponent },
       { path: 'cart', component: CartComponent },
-      { path: 'checkout', component: ChekoutComponent },
+      { path: 'checkout', component: CheckoutComponent },
     ],
   },
   {

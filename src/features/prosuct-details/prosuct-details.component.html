@@ -1,0 +1,68 @@
+<div class="flex justify-between flex-col sm:flex-row">
+  <div class="flex gap-5 md:w-1/2 sm:w-full border-b border-gray-400 sm:border-none pb-5">
+    <div class="flex flex-col gap-2">
+      <!-- {product.image.map((e, index) => (
+              <Image
+                width={150}
+                alt="product image"
+                key={index}
+                class=" px-3 py-1 rounded hover:text-white transition"
+                src={e}
+              ></Image>
+            ))} -->
+    </div>
+    <div class="w-[80%]">
+      <img [src]="product.pictureUrl" alt="product image" class="w-full object-cover" />
+    </div>
+  </div>
+
+  <!-- details section  -->
+  <div class="flex flex-col gap-5 md:w-1/2 w-full px-10">
+    <div class="border-b border-gray-700 py-5 flex flex-col gap-5">
+      <h3 class="text-3xl font-bold">
+        {{ product.name }}
+      </h3>
+      <div class="flex gap-1">
+        <!-- <Image src={rateImagr} alt="" class="w-5" />
+              <Image src={rateImagr} alt="" class="w-5" />
+              <Image src={rateImagr} alt="" class="w-5" />
+              <Image src={rateImagr} alt="" class="w-5" /> -->
+        <div class="text-xl font-medium">(122)</div>
+      </div>
+
+      <p class="text-2xl font-medium">
+        $
+        {{ product.price }}
+      </p>
+      <p class="text-gray-700 font-medium">
+        {{ product.description }}
+      </p>
+      <div>
+        <button class="text-white bg-black font-bold tracking-tight px-5 py-3">ADD TO CART</button>
+      </div>
+    </div>
+
+    <div class="text-gray-700">
+      <p>100% Original product.</p>
+      <p>Cash on delivery is available on this product.</p>
+      <p>Easy return and exchange policy within 7 days.</p>
+    </div>
+  </div>
+</div>
+
+<div class="py-10">
+  <div class="flex">
+    <div class="border border-gray-400 py-2 p-4 font-bold">Description</div>
+    <div class="border border-gray-400 py-2 p-4">Reviews (122)</div>
+  </div>
+  <div class="border border-gray-400 py-2 p-4">
+    {{ product.discount }}
+  </div>
+</div>
+
+<app-title text1="RELATED" text2="PRODUCTS" />
+<p class="text-gray-700 text-center my-5">
+  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been
+  the.
+</p>
+<!-- <RelatedProducts category={product.category}/> -->
