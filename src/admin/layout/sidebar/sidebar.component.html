@@ -1,0 +1,70 @@
+<aside class=" h-full  w-64 bg-white text-black flex flex-col justify-between border-r-[3px] border-gray-200 ">
+
+    <div>
+        <div class="py-4 flex items-center justify-between px-6  border-gray-200 bg-white">
+            <div class="flex flex-col min-w-0">
+                <span class="text-3xl font-bold tracking-wid text-black leading-tight truncate">
+                    Trendora
+                </span>
+                <span class="text-base font-semibold uppercase tracking-wider text-gray-400 truncate">
+                    Admin Dashboard
+                </span>
+            </div>
+
+            <button (click)="$event.stopPropagation(); closeSidebar.emit()" class="lg:hidden text-gray-400 hover:text-black focus:outline-none transition-colors duration-200 text-xl p-1 ml-2 flex items-center justify-center">
+                <i class="fa-solid fa-xmark cursor-pointer"></i>
+            </button>
+        </div>
+
+        <nav class="mt-6 px-4 space-y-1">
+            <a routerLink="overview" [replaceUrl]="true" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="flex items-center px-4 py-3 text-sm font-semibold rounded-lg text-gray-500 hover:bg-gray-50 hover:text-black transition-colors duration-200">
+                <i class="fa-solid fas fa-chart-pie w-5 text-lg mr-3 flex justify-center"></i>
+                Overview
+            </a>
+
+            <a routerLink="products" [replaceUrl]="true" routerLinkActive="active" class="flex items-center px-4 py-3 text-sm font-semibold rounded-lg text-gray-500 hover:bg-gray-50 hover:text-black transition-colors duration-200">
+                <i class="fa-solid fa-bag-shopping w-5 text-lg mr-3 flex justify-center"></i>
+                Products
+            </a>
+
+            <a routerLink="customers" [replaceUrl]="true" routerLinkActive="active" class="flex items-center px-4 py-3 text-sm font-semibold rounded-lg text-gray-500 hover:bg-gray-50 hover:text-black transition-colors duration-200">
+                <i class="fa-solid fa-users w-5 text-lg mr-3 flex justify-center"></i>
+                Customers
+            </a>
+
+            <a routerLink="orders" [replaceUrl]="true" routerLinkActive="active" class="flex items-center px-4 py-3 text-sm font-semibold rounded-lg text-gray-500 hover:bg-gray-50 hover:text-black transition-colors duration-200">
+                <i class="fa-solid fas fa-box w-5 text-lg mr-3 flex justify-center"></i>
+                orders
+
+            </a>
+        </nav>
+    </div>
+
+    <div class="p-4 border-t border-gray-100 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+            <div class="w-9 h-9 rounded-full bg-black flex items-center justify-center text-white font-semibold text-sm">JD</div>
+            <div>
+                <p class="text-sm font-semibold text-black">John Doe</p>
+                <p class="text-xs text-gray-400">Admin</p>
+            </div>
+        </div>
+        <button class="text-gray-400 hover:text-black transition-colors duration-200 text-lg px-2">
+            <i class="fa-solid fa-right-from-bracket"></i>
+        </button>
+    </div>
+</aside>
+<style>
+    @reference "tailwindcss";
+
+    .tab {
+        @apply flex items-center px-4 py-3 text-sm font-semibold rounded-lg text-gray-500  transition-colors duration-200;
+    }
+    .tab:not(:has(.active)):hover {
+        @apply hover:bg-gray-50 hover:text-black;
+
+    }
+        
+    .active {
+        @apply bg-black text-white;
+    }
+</style>

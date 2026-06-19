@@ -8,7 +8,13 @@ import { ProductsComponent } from '../features/products/products/products.compon
 import { ChekoutComponent } from '../features/chekout/chekout.component';
 import { HomeComponent } from '../features/home/home.component';
 import { CartComponent } from '../features/cart/cart.component';
+import { AdminMainComponent } from '../admin/layout/admin-main/admin-main.component';
+import { OverviewAdminComponent } from '../admin/pages/overview-admin/overview-admin.component';
+import { CustomersAdminComponent } from '../admin/pages/customers-admin/customers-admin.component';
+import { OrdersAdminComponent } from '../admin/pages/orders-admin/orders-admin.component';
+import { ProductsAdminComponent } from '../admin/pages/products-admin/products-admin.component';
 export const routes: Routes = [
+  {path:'',redirectTo:'admin', pathMatch:'full'},
   {
     path: '',
     component: MainComponent,
@@ -25,4 +31,15 @@ export const routes: Routes = [
       { path: 'checkout', component: ChekoutComponent },
     ],
   },
+  {
+    path: 'admin',
+    component: AdminMainComponent,
+    children: [
+      { path: '', redirectTo: 'overview', pathMatch: 'full' },
+      { path: 'overview', component: OverviewAdminComponent },
+      { path: 'products', component: ProductsAdminComponent },
+      { path: 'customers', component: CustomersAdminComponent },
+      { path: 'orders', component:OrdersAdminComponent },
+    ],
+  }
 ];

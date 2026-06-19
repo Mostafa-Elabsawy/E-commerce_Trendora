@@ -1,0 +1,18 @@
+<header class="flex items-center justify-between px-6 py-5 border-b-2 border-gray-300 bg-white w-full">
+    <div class="flex items-center space-x-3">
+        <button (click)="toggleSidebar.emit()" class="text-black focus:outline-none lg:hidden mr-1">
+            <i class="fa-solid fa-bars text-xl cursor-pointer"></i>
+        </button>
+
+        <div class="hidden lg:flex items-center space-x-2 text-black">
+            <i class="fa-solid fa-chart-pie text-lg"></i>
+            <span class="font-bold text-lg tracking-wide">Dashboard</span>
+        </div>
+
+        <div class="flex lg:hidden items-center space-x-2 text-black">
+            <i class="fa-solid fa-chart-pie text-base"></i>
+            <span class="font-bold tracking-wide">DASHBOARD</span>
+        </div>
+    </div>
+
+</header>
