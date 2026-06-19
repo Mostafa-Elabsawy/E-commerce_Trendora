@@ -61,8 +61,13 @@
     </div>
 
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
-      @for (product of products.slice(0, 10); track $index) {
-        <app-product-card />
+      <!-- @for (product of products; track $index) {
+      <app-product-card [product]="product"></app-product-card>
+      } -->
+      @for (item of products(); track item.id) {
+        <app-product-card [product]="item" />
+      } @empty {
+        <p class="text-center text-gray-500 col-span-full">There are no products to display.</p>
       }
     </div>
   </div>

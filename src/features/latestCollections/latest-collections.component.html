@@ -1,4 +1,3 @@
-
 <div>
   <app-title text1="LATEST" text2="COLLECTIONS" />
 
@@ -10,8 +9,10 @@
   <div
     class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 py-5"
   >
-    @for (product of products.slice(0, 10); track $index) {
-      <app-product-card />
+    @for (item of products().slice(0, 10); track item.id) {
+      <app-product-card [product]="item" />
+    } @empty {
+      <p class="text-center text-gray-500 col-span-full">There are no products to display.</p>
     }
   </div>
 </div>
