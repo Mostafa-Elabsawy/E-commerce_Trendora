@@ -1,26 +1,25 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment.prod';
-import { Category } from '../models/category.interface';
+import { Brand } from '../models/brand.interface';
 import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
-export class CategoryService {
-  private url = environment.apiURL + 'Categories';
+export class BrandService {
+  private url = environment.apiURL + 'Brands';
   constructor(private http: HttpClient) {}
 
-  getAllCategories() {
+  getAllBrands() {
     return this.http.get<any[]>(this.url).pipe(
       map((res) =>
         res.map(
-          (cat) =>
+          (brand) =>
             ({
-              Id: cat.Id ?? cat.id,
-              Name: cat.Name ?? cat.name,
-              CategoryId: cat.CategoryId ?? cat.categoryId,
-            } as Category)
+              Id: brand.Id ?? brand.id,
+              Name: brand.Name ?? brand.name,
+            } as Brand)
         )
       )
     );

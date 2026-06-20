@@ -3,10 +3,11 @@ import { TitleComponent } from '../title/title.component';
 import { ActivatedRoute } from '@angular/router';
 import { ProductService } from '../../core/services/product.service';
 import { IProduct } from '../../core/models/product.interface';
+import { RelatedProductsComponent } from "../related-products/related-products.component";
 
 @Component({
   selector: 'app-prosuct-details',
-  imports: [TitleComponent],
+  imports: [RelatedProductsComponent],
   templateUrl: './prosuct-details.component.html',
   styleUrl: './prosuct-details.component.css',
 })
@@ -14,9 +15,9 @@ export class ProsuctDetailsComponent {
   constructor(
     private _activedRoute: ActivatedRoute,
     private _productService: ProductService,
-  ) {}
+  ) { }
   id!: string;
-  product!:IProduct;
+  product!: IProduct;
 
   loadProductDetails(id: string) {
     this._productService.grtProductById(id).subscribe({
