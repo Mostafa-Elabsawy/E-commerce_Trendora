@@ -1,0 +1,11 @@
+:host {
+  display: block;
+}
+
+a {
+  text-decoration: none;
+}
+
+button {
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
