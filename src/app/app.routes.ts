@@ -15,7 +15,7 @@ import { ProductsAdminComponent } from '../admin/pages/products-admin/products-a
 import { CheckoutComponent } from '../features/checkout/checkout.component';
 import { ProsuctDetailsComponent } from '../features/prosuct-details/prosuct-details.component';
 export const routes: Routes = [
-  {path:'',redirectTo:'admin', pathMatch:'full'},
+ 
   {
     path: '',
     component: MainComponent,

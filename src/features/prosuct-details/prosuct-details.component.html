@@ -1,68 +1,106 @@
-<div class="flex justify-between flex-col sm:flex-row">
-  <div class="flex gap-5 md:w-1/2 sm:w-full border-b border-gray-400 sm:border-none pb-5">
-    <div class="flex flex-col gap-2">
-      <!-- {product.image.map((e, index) => (
-              <Image
-                width={150}
-                alt="product image"
-                key={index}
-                class=" px-3 py-1 rounded hover:text-white transition"
-                src={e}
-              ></Image>
-            ))} -->
-    </div>
-    <div class="w-[80%]">
-      <img [src]="product.pictureUrl" alt="product image" class="w-full object-cover" />
-    </div>
-  </div>
-
-  <!-- details section  -->
-  <div class="flex flex-col gap-5 md:w-1/2 w-full px-10">
-    <div class="border-b border-gray-700 py-5 flex flex-col gap-5">
-      <h3 class="text-3xl font-bold">
-        {{ product.name }}
-      </h3>
-      <div class="flex gap-1">
-        <!-- <Image src={rateImagr} alt="" class="w-5" />
-              <Image src={rateImagr} alt="" class="w-5" />
-              <Image src={rateImagr} alt="" class="w-5" />
-              <Image src={rateImagr} alt="" class="w-5" /> -->
-        <div class="text-xl font-medium">(122)</div>
-      </div>
-
-      <p class="text-2xl font-medium">
-        $
-        {{ product.price }}
-      </p>
-      <p class="text-gray-700 font-medium">
-        {{ product.description }}
-      </p>
-      <div>
-        <button class="text-white bg-black font-bold tracking-tight px-5 py-3">ADD TO CART</button>
+@if (product) {
+  <div class="flex justify-between flex-col sm:flex-row gap-8">
+    <div class="flex gap-5 md:w-1/2 sm:w-full border-b border-gray-400 sm:border-none pb-5">
+      <div class="flex flex-col gap-2"></div>
+      <div class="w-[80%] mx-auto bg-gray-50 rounded-2xl overflow-hidden p-4 flex items-center justify-center">
+        <img [src]="product.PictureUrl" alt="product image" class="max-w-full h-auto object-contain rounded-xl max-h-[500px]" />
       </div>
     </div>
 
-    <div class="text-gray-700">
-      <p>100% Original product.</p>
-      <p>Cash on delivery is available on this product.</p>
-      <p>Easy return and exchange policy within 7 days.</p>
+    <!-- details section  -->
+    <div class="flex flex-col gap-5 md:w-1/2 w-full px-4 sm:px-10">
+      <div class="border-b border-gray-200 py-5 flex flex-col gap-4">
+        <h3 class="text-3xl font-bold text-gray-900 tracking-tight">
+          {{ product.Name }}
+        </h3>
+        <div class="flex items-center gap-2">
+          <div class="flex text-yellow-400 text-lg">★★★★★</div>
+          <div class="text-sm font-medium text-gray-500">(122 Reviews)</div>
+        </div>
+
+        <div class="flex items-baseline gap-3 mt-2">
+          <span class="text-3xl font-bold text-black">${{ product.Price }}</span>
+          @if (product.Discount > 0) {
+            <span class="text-sm text-red-500 line-through">${{ product.Price + product.Discount }}</span>
+          }
+        </div>
+
+        <p class="text-gray-600 leading-relaxed mt-4">
+          {{ product.Description }}
+        </p>
+
+        <div class="mt-6 flex flex-col gap-3">
+          <div class="flex items-center gap-3">
+            <span class="text-sm font-semibold text-gray-700">Availability:</span>
+            @if (product.InStock) {
+              <span class="px-2.5 py-1 text-xs font-semibold text-green-700 bg-green-50 rounded-full">In Stock ({{ product.StockQuantity }} available)</span>
+            } @else {
+              <span class="px-2.5 py-1 text-xs font-semibold text-red-700 bg-red-50 rounded-full">Out of Stock</span>
+            }
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="text-sm font-semibold text-gray-700">Brand:</span>
+            <span class="text-sm text-gray-600">{{ product.ProductBrand }}</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="text-sm font-semibold text-gray-700">Category:</span>
+            <span class="text-sm text-gray-600">{{ product.CategoryName }} - {{ product.SubCategory }}</span>
+          </div>
+        </div>
+
+        <div class="mt-8">
+          <button 
+            [disabled]="!product.InStock"
+            class="text-white bg-black hover:bg-gray-800 disabled:bg-gray-300 disabled:cursor-not-allowed font-bold tracking-wide px-8 py-3.5 rounded-lg transition-all duration-200 transform hover:scale-[1.02]"
+          >
+            ADD TO CART
+          </button>
+        </div>
+      </div>
+
+      <div class="text-gray-600 flex flex-col gap-3 mt-4 text-sm">
+        <div class="flex items-center gap-2">
+          <span class="text-black">✓</span> 100% Original product.
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-black">✓</span> Cash on delivery is available on this product.
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-black">✓</span> Easy return and exchange policy within 7 days.
+        </div>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="py-10">
-  <div class="flex">
-    <div class="border border-gray-400 py-2 p-4 font-bold">Description</div>
-    <div class="border border-gray-400 py-2 p-4">Reviews (122)</div>
+  <div class="py-10 mt-10 border-t border-gray-100">
+    <div class="flex border-b border-gray-200">
+      <button class="border-b-2 border-black py-3 px-6 font-bold text-sm">Description</button>
+      <button class="py-3 px-6 text-gray-500 hover:text-black text-sm">Reviews (122)</button>
+    </div>
+    <div class="py-6 text-gray-600 text-sm leading-relaxed">
+      {{ product.Description }}
+      @if (product.Discount > 0) {
+        <p class="mt-4 text-green-600 font-semibold">Special Offer: Save ${{ product.Discount }} on this purchase!</p>
+      }
+    </div>
   </div>
-  <div class="border border-gray-400 py-2 p-4">
-    {{ product.discount }}
-  </div>
-</div>
 
-<app-title text1="RELATED" text2="PRODUCTS" />
-<p class="text-gray-700 text-center my-5">
-  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been
-  the.
-</p>
-<!-- <RelatedProducts category={product.category}/> -->
+
+  <app-related-products [categoryId]="product.CategoryId" [excludeProductId]="product.Id"></app-related-products>
+
+} @else {
+  <div class="flex justify-between flex-col sm:flex-row gap-8 animate-pulse">
+    <div class="md:w-1/2 w-full h-[400px] bg-gray-100 rounded-2xl"></div>
+    <div class="flex flex-col gap-5 md:w-1/2 w-full px-4 sm:px-10">
+      <div class="h-8 bg-gray-200 rounded w-3/4"></div>
+      <div class="h-4 bg-gray-100 rounded w-1/4"></div>
+      <div class="h-6 bg-gray-200 rounded w-1/3"></div>
+      <div class="space-y-3 mt-4">
+        <div class="h-4 bg-gray-100 rounded w-full"></div>
+        <div class="h-4 bg-gray-100 rounded w-full"></div>
+        <div class="h-4 bg-gray-100 rounded w-2/3"></div>
+      </div>
+      <div class="h-12 bg-gray-200 rounded-lg w-1/3 mt-8"></div>
+    </div>
+  </div>
+}

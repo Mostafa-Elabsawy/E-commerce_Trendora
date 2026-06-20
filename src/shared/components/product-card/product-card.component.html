@@ -1,7 +1,7 @@
-<a [routerLink]="['/productDetails/', product.id]" class="block w-full">
+<a [routerLink]="['/productDetails/', product.Id]" class="block w-full">
   <div class="overflow-hidden rounded-lg">
     <img
-      [src]="product.pictureUrl"
+      [src]="product.PictureUrl"
       alt="product image"
       class="w-full h-48 sm:h-60 object-cover transition-all duration-300 hover:scale-110"
     />
@@ -9,15 +9,15 @@
 
   <div class="mt-3">
     <p class="text-sm sm:text-base font-medium truncate">
-      {{ product.name }}
+      {{ product.Name }}
     </p>
 
     <p class="text-xs sm:text-sm text-gray-500">
-      {{ product.productBrand || product.productType }}
+      {{ product.ProductBrand }}
     </p>
 
     <p class="text-sm sm:text-base font-semibold mt-1">
-      {{ '$' + product.price }}
+      {{ '$' + product.Price }}
     </p>
   </div>
 </a>
