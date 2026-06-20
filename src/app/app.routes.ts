@@ -14,6 +14,7 @@ import { OrdersAdminComponent } from '../admin/pages/orders-admin/orders-admin.c
 import { ProductsAdminComponent } from '../admin/pages/products-admin/products-admin.component';
 import { CheckoutComponent } from '../features/checkout/checkout.component';
 import { ProsuctDetailsComponent } from '../features/prosuct-details/prosuct-details.component';
+import { ProfileComponent } from '../features/profile/profile.component';
 export const routes: Routes = [
  
   {
@@ -31,6 +32,7 @@ export const routes: Routes = [
       { path: 'products', component: ProductsComponent },
       { path: 'cart', component: CartComponent },
       { path: 'checkout', component: CheckoutComponent },
+      { path: 'profile', component: ProfileComponent },
     ],
   },
   {

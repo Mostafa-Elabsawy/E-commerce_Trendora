@@ -44,11 +44,13 @@
         class="w-6 h-6 cursor-pointer"
       />
 
-      <img
-        src="assets/frontend_assets/profile_icon.png"
-        alt="Profile"
-        class="w-6 h-6 cursor-pointer"
-      />
+      <a routerLink="/profile">
+        <img
+          src="assets/frontend_assets/profile_icon.png"
+          alt="Profile"
+          class="w-6 h-6 cursor-pointer"
+        />
+      </a>
 
       <a routerLink="/cart">
         <img src="assets/frontend_assets/cart_icon.png" alt="Cart" class="w-6 h-6 cursor-pointer" />
@@ -66,6 +68,7 @@
       <a routerLink="/collection" (click)="isMenuOpen = false">Collection</a>
       <a routerLink="/about" (click)="isMenuOpen = false">About</a>
       <a routerLink="/contact" (click)="isMenuOpen = false">Contact</a>
+      <a routerLink="/profile" (click)="isMenuOpen = false">Profile</a>
     </nav>
   }
 </header>
