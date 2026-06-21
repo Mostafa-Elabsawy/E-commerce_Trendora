@@ -5,51 +5,54 @@
       <h1 class="text-3xl font-semibold text-slate-900">Profile</h1>
       <p class="mt-2 text-sm text-slate-500">Manage your personal details, orders, and account settings.</p>
     </div>
-    <button class="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50">
-      Edit Profile
-    </button>
   </div>
 
   <div class="grid gap-8 lg:grid-cols-[300px_1fr]">
-    <aside class="space-y-6 rounded-[32px] border border-slate-200 bg-white p-6 shadow-sm">
-      <div class="flex items-center gap-4">
-        <div class="flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 text-2xl font-semibold text-slate-700">
-          {{ user.initials }}
+    <aside class="flex h-full flex-col justify-between rounded-[32px] border border-slate-200 bg-white p-6 shadow-sm">
+      <div>
+        <div class="flex items-center gap-4">
+          <div class="flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 text-2xl font-semibold text-slate-700">
+            {{ user.initials }}
+          </div>
+          <div>
+            <p class="text-sm text-slate-500">Welcome back</p>
+            <h2 class="text-xl font-semibold text-slate-900">{{ user.name }}</h2>
+          </div>
         </div>
-        <div>
-          <p class="text-sm text-slate-500">Logged in as</p>
-          <h2 class="text-xl font-semibold text-slate-900">{{ user.name }}</h2>
-          <p class="text-sm text-slate-500">{{ user.email }}</p>
+
+        <div class="mt-8 grid gap-3">
+          @for (item of menuItems; track item.key) {
+            <button
+              type="button"
+              (click)="setActiveTab(item.key)"
+              class="group flex w-full items-center rounded-2xl px-4 py-4 text-sm font-medium transition"
+              [class.bg-slate-100]="activeTab === item.key"
+              [class.text-slate-900]="activeTab === item.key"
+              [class.text-slate-600]="activeTab !== item.key"
+            >
+              <span class="mr-3 text-lg">{{ item.icon }}</span>
+              {{ item.label }}
+            </button>
+          }
         </div>
       </div>
 
-      <div class="grid gap-3">
-        @for (item of menuItems; track item.label) {
-          <a
-            [routerLink]="item.route"
-            class="block rounded-2xl px-4 py-4 text-sm font-medium transition hover:bg-slate-50"
-            [class.bg-slate-100]="item.active"
-            [class.text-slate-900]="item.active"
-            [class.text-slate-600]="!item.active"
-          >
-            {{ item.label }}
-          </a>
-        }
-      </div>
+      <div class="mt-6 border-t border-slate-200 pt-5">
+        <a
+          href="mailto:{{ user.email }}"
+          class="flex items-center justify-between gap-3 rounded-3xl bg-slate-50 px-4 py-4 text-sm text-slate-700 hover:bg-slate-100"
+        >
+          <span class="font-medium">Email</span>
+          <span class="truncate text-right text-slate-500">{{ user.email }}</span>
+        </a>
 
-      <div class="grid gap-3 rounded-[28px] bg-slate-50 p-4">
-        <div class="rounded-3xl bg-white p-4 shadow-sm">
-          <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Orders</p>
-          <p class="mt-3 text-3xl font-semibold text-slate-900">{{ user.orders }}</p>
-        </div>
-        <div class="rounded-3xl bg-white p-4 shadow-sm">
-          <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Saved</p>
-          <p class="mt-3 text-3xl font-semibold text-slate-900">{{ user.saved }}</p>
-        </div>
-        <div class="rounded-3xl bg-white p-4 shadow-sm">
-          <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Spent</p>
-          <p class="mt-3 text-3xl font-semibold text-slate-900">{{ user.spend }}</p>
-        </div>
+        <button
+          type="button"
+          class="mt-3 flex w-full items-center justify-center gap-2 rounded-3xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white hover:bg-slate-800"
+        >
+          <span>🔓</span>
+          Logout
+        </button>
       </div>
     </aside>
 
@@ -57,59 +60,123 @@
       <div class="rounded-[32px] border border-slate-200 bg-white p-8 shadow-sm">
         <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p class="text-sm uppercase tracking-[0.2em] text-slate-500">Personal info</p>
-            <h2 class="mt-2 text-2xl font-semibold text-slate-900">Profile Details</h2>
+            <p class="text-sm uppercase tracking-[0.2em] text-slate-500">Account</p>
+            <h2 class="mt-2 text-2xl font-semibold text-slate-900">
+              @if (activeTab === 'profile') {
+                Profile Details
+              }
+              @if (activeTab === 'addresses') {
+                Addresses
+              }
+              @if (activeTab === 'orders') {
+                Orders
+              }
+              @if (activeTab === 'wishlist') {
+                Wishlist
+              }
+            </h2>
           </div>
-          <button class="rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white hover:bg-slate-800">
-            Save changes
-          </button>
+
+          @if (activeTab === 'profile') {
+            <button class="rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white hover:bg-slate-800">
+              Edit profile
+            </button>
+          }
         </div>
 
-        <div class="mt-8 grid gap-6 sm:grid-cols-2">
-          <div>
-            <p class="text-sm font-medium text-slate-700">Full name</p>
-            <p class="mt-2 text-slate-600">{{ user.name }}</p>
-          </div>
-          <div>
-            <p class="text-sm font-medium text-slate-700">Email address</p>
-            <p class="mt-2 text-slate-600">{{ user.email }}</p>
-          </div>
-          <div>
-            <p class="text-sm font-medium text-slate-700">Phone</p>
-            <p class="mt-2 text-slate-600">{{ user.phone }}</p>
-          </div>
-          <div>
-            <p class="text-sm font-medium text-slate-700">Shipping address</p>
-            <p class="mt-2 text-slate-600">{{ user.address }}</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="grid gap-6 lg:grid-cols-2">
-        <div class="rounded-[32px] border border-slate-200 bg-white p-6 shadow-sm">
-          <p class="text-sm uppercase tracking-[0.24em] text-slate-500">Recent orders</p>
-          <div class="mt-6 space-y-4">
-            @for (order of recentOrders; track order.id) {
-              <div class="rounded-3xl bg-slate-50 p-4">
-                <div class="flex items-start justify-between gap-4">
-                  <div>
-                    <p class="text-sm font-semibold text-slate-900">Order #{{ order.id }}</p>
-                    <p class="text-sm text-slate-500">{{ order.date }} · {{ order.items }} items</p>
-                  </div>
-                  <span class="rounded-full bg-slate-200 px-3 py-1 text-xs font-semibold uppercase text-slate-700">{{ order.status }}</span>
-                </div>
+        <div class="mt-8">
+          @if (activeTab === 'profile') {
+            <div class="grid gap-6 sm:grid-cols-2">
+              <div>
+                <p class="text-sm font-medium text-slate-700">Full name</p>
+                <p class="mt-2 text-slate-600">{{ user.name }}</p>
               </div>
-            }
-          </div>
-        </div>
+              <div>
+                <p class="text-sm font-medium text-slate-700">Email address</p>
+                <p class="mt-2 text-slate-600">{{ user.email }}</p>
+              </div>
+              <div>
+                <p class="text-sm font-medium text-slate-700">Phone</p>
+                <p class="mt-2 text-slate-600">{{ user.phone }}</p>
+              </div>
+              <div>
+                <p class="text-sm font-medium text-slate-700">Date of birth</p>
+                <p class="mt-2 text-slate-600">{{ user.dob }}</p>
+              </div>
+            </div>
+          }
 
-        <div class="rounded-[32px] border border-slate-200 bg-white p-6 shadow-sm">
-          <p class="text-sm uppercase tracking-[0.24em] text-slate-500">Account activity</p>
-          <div class="mt-6 space-y-4 text-sm text-slate-600">
-            <p><strong class="text-slate-900">Member since:</strong> {{ user.memberSince }}</p>
-            <p><strong class="text-slate-900">Favorite category:</strong> Home & Living</p>
-            <p><strong class="text-slate-900">Payment method:</strong> Visa ending 1234</p>
-          </div>
+          @if (activeTab === 'addresses') {
+            <div class="space-y-6">
+              <div class="flex items-center justify-between gap-4">
+                <p class="text-sm uppercase tracking-[0.24em] text-slate-500">Saved addresses</p>
+                <button class="rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800">
+                  Edit addresses
+                </button>
+              </div>
+              <div class="grid gap-4">
+                @for (address of user.addresses; track address) {
+                  <div class="rounded-3xl border border-slate-200 bg-slate-50 p-5 text-slate-700">
+                    {{ address }}
+                  </div>
+                }
+              </div>
+            </div>
+          }
+
+          @if (activeTab === 'orders') {
+            <div class="grid gap-6 sm:grid-cols-2">
+              <div class="rounded-[28px] bg-slate-50 p-6">
+                <p class="text-sm uppercase tracking-[0.24em] text-slate-500">Total orders</p>
+                <p class="mt-4 text-3xl font-semibold text-slate-900">{{ user.orders }}</p>
+              </div>
+              <div class="rounded-[28px] bg-slate-50 p-6">
+                <p class="text-sm uppercase tracking-[0.24em] text-slate-500">Total cost</p>
+                <p class="mt-4 text-3xl font-semibold text-slate-900">{{ user.spend }}</p>
+              </div>
+            </div>
+
+            <div class="mt-8 space-y-4">
+              <p class="text-sm uppercase tracking-[0.24em] text-slate-500">Recent orders</p>
+              @for (order of recentOrders; track order.id) {
+                <div class="rounded-3xl bg-slate-50 p-5">
+                  <div class="flex items-center justify-between gap-4">
+                    <div>
+                      <p class="text-sm font-semibold text-slate-900">Order #{{ order.id }}</p>
+                      <p class="mt-1 text-sm text-slate-500">{{ order.date }} · {{ order.items }} items</p>
+                    </div>
+                    <span class="rounded-full bg-slate-200 px-3 py-1 text-xs font-semibold uppercase text-slate-700">{{ order.status }}</span>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+
+          @if (activeTab === 'wishlist') {
+            <div class="space-y-6">
+              <div class="flex items-center justify-between gap-4">
+                <div>
+                  <p class="text-sm uppercase tracking-[0.24em] text-slate-500">Wishlist</p>
+                  <p class="mt-2 text-slate-700">Saved items and requests</p>
+                </div>
+                <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase text-slate-700">{{ user.saved }} items</span>
+              </div>
+
+              <div class="space-y-4">
+                @for (item of wishlistItems; track item.title) {
+                  <div class="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+                    <div class="flex items-center justify-between gap-4">
+                      <div>
+                        <p class="font-semibold text-slate-900">{{ item.title }}</p>
+                        <p class="mt-1 text-sm text-slate-500">{{ item.status }}</p>
+                      </div>
+                      <p class="text-sm font-semibold text-slate-900">{{ item.price }}</p>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          }
         </div>
       </div>
     </section>
