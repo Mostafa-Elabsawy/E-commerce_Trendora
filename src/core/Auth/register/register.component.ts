@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { debounceTime } from 'rxjs';
 import { RouterLink } from "@angular/router";
+import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-register',
   imports: [ReactiveFormsModule, RouterLink],
@@ -9,6 +10,7 @@ import { RouterLink } from "@angular/router";
   styleUrl: './register.component.css',
 })
 export class RegisterComponent {
+  constructor(private authS: AuthService) { }
   name = new FormControl('', {
     nonNullable: true,
     validators: [Validators.required, Validators.minLength(3)],
@@ -21,7 +23,7 @@ export class RegisterComponent {
     nonNullable: true,
     validators: [Validators.required, Validators.minLength(3)],
   });
-  signUpForm = new FormGroup({
+  registerForm = new FormGroup({
     name: this.name,
     email: this.email,
     password: this.password,
@@ -29,7 +31,26 @@ export class RegisterComponent {
   onSubmit() {
     console.log('data submited succesfully');
 
-    let data = this.signUpForm.getRawValue;
+    let data = this.registerForm.getRawValue();
+
+    let payload = {
+      displayName: data.name,
+      email: data.email,
+      password: data.password
+    };
+
+    this.authS.register(payload).subscribe({
+      next: (res) => {
+        console.log(res);
+
+      }, error: (err) => {
+        console.error('Registration failed:', err.error);
+        if (err.error && err.error.errors) {
+          console.error('Validation errors:', err.error.errors);
+        }
+      }
+    })
+
     /**/
   }
   ngAfterViewInit() {
@@ -41,8 +62,8 @@ export class RegisterComponent {
         this.email.markAsDirty();
       }
     });
-    this.signUpForm.valueChanges.subscribe(() => {
-      console.log(this.signUpForm.value);
+    this.registerForm.valueChanges.subscribe(() => {
+      console.log(this.registerForm.value);
     });
   }
 }

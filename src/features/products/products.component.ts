@@ -30,30 +30,27 @@ export class ProductsComponent implements OnInit {
   subCategories = signal<SubCategory[]>([]);
   brands = signal<Brand[]>([]);
   totalCount = signal<number>(0);
-
-  // Filter state
   selectedCategoryId: number | null = null;
   selectedBrandId: number | null = null;
   selectedSubCategoryId: number | null = null;
   selectedSort: string = '';
   selectedPriceRange: string = '';
-  pageSize: number = 100; // Increase page size to fetch all products for accurate client-side pricing
+  pageSize: number = 100;
 
-  // Computed signal for client-side price filtering
+
   filteredProducts = computed(() => {
     let list = this.allProducts();
-
     if (this.selectedPriceRange) {
       if (this.selectedPriceRange === 'under-250') {
-        list = list.filter((p) => p.Price < 250);
+        list = list.filter((p) => p.price < 250);
       } else if (this.selectedPriceRange === '250-500') {
-        list = list.filter((p) => p.Price >= 250 && p.Price <= 500);
+        list = list.filter((p) => p.price >= 250 && p.price <= 500);
       } else if (this.selectedPriceRange === '500-1000') {
-        list = list.filter((p) => p.Price >= 500 && p.Price <= 1000);
+        list = list.filter((p) => p.price >= 500 && p.price <= 1000);
       } else if (this.selectedPriceRange === '1000-5000') {
-        list = list.filter((p) => p.Price >= 1000 && p.Price <= 5000);
+        list = list.filter((p) => p.price >= 1000 && p.price <= 5000);
       } else if (this.selectedPriceRange === 'over-5000') {
-        list = list.filter((p) => p.Price > 5000);
+        list = list.filter((p) => p.price > 5000);
       }
     }
 
@@ -78,15 +75,14 @@ export class ProductsComponent implements OnInit {
 
     this._products.getAllProducts(params).subscribe({
       next: (res: any) => {
-        this.allProducts.set(res.Data ?? res.data ?? []);
-        this.totalCount.set(res.Count ?? res.count ?? 0);
+        this.allProducts.set(res.data ?? []);
+        this.totalCount.set( res.count ?? 0);
       },
       error: (err) => {
         console.error('Failed to load products:', err);
       },
     });
   }
-
   loadCategories() {
     this._categories.getAllCategories().subscribe({
       next: (res: any) => {
@@ -97,7 +93,6 @@ export class ProductsComponent implements OnInit {
       },
     });
   }
-
   loadSubCategories() {
     this._subCategories.getAllSubCategories().subscribe({
       next: (res: any) => {
@@ -123,7 +118,6 @@ export class ProductsComponent implements OnInit {
   onFilterChange() {
     this.loadProducts();
   }
-
   clearFilters() {
     this.selectedCategoryId = null;
     this.selectedBrandId = null;

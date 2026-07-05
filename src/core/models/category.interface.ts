@@ -1,5 +1,14 @@
+
+export interface subCategory {
+  id: number;
+  name: string;
+  categoryId: number;
+  categoryName: string;
+}
+
 export interface Category {
-  Id: number;
-  Name: string;
-  CategoryId: string;
+  id: number;
+  name: string;
+  description: string;
+  subCategories: subCategory[];
 }

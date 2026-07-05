@@ -17,25 +17,8 @@ export interface ProductQueryParams {
   providedIn: 'root',
 })
 export class ProductService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
   private url = environment.apiURL + 'Products';
-
-  private normalizeProduct(p: any): IProduct {
-    return {
-      Id: p.Id ?? p.id,
-      Name: p.Name ?? p.name,
-      Description: p.Description ?? p.description,
-      PictureUrl: p.PictureUrl ?? p.pictureUrl,
-      Price: p.Price ?? p.price,
-      Discount: p.Discount ?? p.discount,
-      StockQuantity: p.StockQuantity ?? p.stockQuantity,
-      InStock: p.InStock ?? p.inStock,
-      ProductBrand: p.ProductBrand ?? p.productBrand ?? p.brand ?? '',
-      SubCategory: p.SubCategory ?? p.subCategory ?? '',
-      CategoryId: p.CategoryId ?? p.categoryId,
-      CategoryName: p.CategoryName ?? p.categoryName ?? '',
-    };
-  }
 
   getAllProducts(queryParams?: ProductQueryParams) {
     let params = new HttpParams();
@@ -64,20 +47,17 @@ export class ProductService {
     return this.http.get<any>(this.url, { params }).pipe(
       map((res) => {
         const data = res.Data ?? res.data ?? [];
-        const normalizedData = data.map((p: any) => this.normalizeProduct(p));
         return {
-          PageIndex: res.PageIndex ?? res.pageIndex ?? 1,
-          PageSize: res.PageSize ?? res.pageSize ?? 10,
-          Count: res.Count ?? res.count ?? 0,
-          Data: normalizedData,
+          pageIndex: res.pageIndex ?? 1,
+          pageSize: res.pageSize ?? 10,
+          count: res.count ?? 0,
+          data: res.data,
         } as IProductPaginationResponse;
       })
     );
   }
 
   grtProductById(id: string) {
-    return this.http.get<any>(this.url + '/' + id).pipe(
-      map((res) => this.normalizeProduct(res))
-    );
+    return this.http.get<IProduct>(this.url + '/' + id);
   }
 }
