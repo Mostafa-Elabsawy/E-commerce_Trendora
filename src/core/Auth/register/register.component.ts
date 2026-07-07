@@ -9,15 +9,15 @@ import { RouterLink } from "@angular/router";
   styleUrl: './register.component.css',
 })
 export class RegisterComponent {
-  name = new FormControl('', {
+  name = new FormControl<string>('', {
     nonNullable: true,
     validators: [Validators.required, Validators.minLength(3)],
   });
-  email = new FormControl('', {
+  email = new FormControl<string>('', {
     nonNullable: true,
     validators: [Validators.required, Validators.email],
   });
-  password = new FormControl('', {
+  password = new FormControl<string>('', {
     nonNullable: true,
     validators: [Validators.required, Validators.minLength(3)],
   });
@@ -29,7 +29,7 @@ export class RegisterComponent {
   onSubmit() {
     console.log('data submited succesfully');
 
-    let data = this.signUpForm.getRawValue;
+    let data = this.signUpForm.getRawValue();
     /**/
   }
   ngAfterViewInit() {

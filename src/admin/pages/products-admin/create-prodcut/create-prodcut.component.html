@@ -1,0 +1,194 @@
+@if(state())
+{
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
+
+    <div class="w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white shadow-xl transition-all border border-slate-200">
+
+        <!-- Header -->
+        <header class="flex items-center justify-between border-b border-slate-100 px-6 py-4 bg-slate-50/50">
+
+            <div>
+                <h2 class="text-xl font-bold text-slate-900">
+                    Add New Product
+                </h2>
+
+                <p class="text-xs text-slate-500 mt-0.5">
+                    Register a fresh catalog item to your inventory matrix
+                </p>
+            </div>
+
+            <button class="group rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition">
+                <i (click)="closeModal()" class="fa-solid fa-xmark text-lg group-hover:scale-105 transition-transform"></i>
+            </button>
+
+        </header>
+
+        <!-- Form -->
+        <form>
+
+            <section class="p-6 space-y-6 overflow-y-auto max-h-[calc(100vh-200px)]">
+
+                <!-- Product Details -->
+                <div class="space-y-4">
+
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-indigo-600 border-b border-slate-100 pb-1">
+                        Product Details
+                    </h3>
+
+                    <div class="grid gap-4 grid-cols-1">
+
+                        <div class="md:col-span-4">
+
+                            <label class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+                                Product Name
+                            </label>
+
+                            <input type="text" value="Wireless Mechanical Keyboard" placeholder="e.g. Wireless Mechanical Keyboard" class="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-sm outline-none transition focus:border-indigo-500 focus:bg-white" />
+
+                        </div>
+
+                        <div class="md:col-span-6">
+
+                            <label class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+                                Picture URL
+                            </label>
+
+                            <input type="url" value="https://images.example.com/products/keyboard.jpg" placeholder="https://images.example.com/products/item.jpg" class="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-sm outline-none transition focus:border-indigo-500 focus:bg-white" />
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Categorization -->
+                <div class="space-y-4 pt-2">
+
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-indigo-600 border-b border-slate-100 pb-1">
+                        Categorization
+                    </h3>
+
+                    <div class="grid gap-4 grid-cols-2">
+
+                        <div class="col-span-2">
+
+                            <label class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+                                Main Category
+                            </label>
+
+                            <input type="text" value="Electronics" placeholder="Electronics" class="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-sm outline-none transition focus:border-indigo-500 focus:bg-white" />
+
+                        </div>
+
+                        <div class="md:col-span-1 col-span-full">
+
+                            <label class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+                                Sub-Category
+                            </label>
+
+                            <input type="text" value="Computer Peripherals" placeholder="Computer Peripherals" class="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-sm outline-none transition focus:border-indigo-500 focus:bg-white" />
+
+                        </div>
+                        <div class="md:col-span-1 col-span-full">
+
+                            <label class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+                                Model Ref
+                            </label>
+
+                            <input type="text" value="MK-85X" placeholder="e.g. MK-85X" class="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-sm outline-none transition focus:border-indigo-500 focus:bg-white" />
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Stock & Pricing -->
+                <div class="space-y-4 pt-2">
+
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-indigo-600 border-b border-slate-100 pb-1">
+                        Stock & Pricing
+                    </h3>
+
+                    <div class="grid gap-4 md:grid-cols-3">
+
+                        <div>
+
+                            <label class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+                                Base Price ($)
+                            </label>
+
+                            <input type="number" value="129.99" placeholder="99.99" step="0.01" class="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-sm outline-none transition focus:border-indigo-500 focus:bg-white" />
+
+                        </div>
+
+                        <div>
+
+                            <label class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+                                Discount Rate (%)
+                            </label>
+
+                            <input type="number" value="10" placeholder="0" min="0" max="100" class="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-sm outline-none transition focus:border-indigo-500 focus:bg-white" />
+
+                        </div>
+
+                        <div>
+
+                            <label class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+                                Initial Stock Units
+                            </label>
+
+                            <input type="number" value="50" placeholder="50" min="0" class="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-sm outline-none transition focus:border-indigo-500 focus:bg-white" />
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Description -->
+                <div class="space-y-4 pt-2">
+
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-indigo-600 border-b border-slate-100 pb-1">
+                        Product Description
+                    </h3>
+
+                    <div>
+
+                        <label class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            Description
+                        </label>
+
+                        <textarea rows="5" placeholder="Describe the product features and specifications..." class="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-indigo-500 focus:bg-white">Premium wireless mechanical keyboard with RGB lighting, hot-swappable switches, Bluetooth connectivity, and long battery life.</textarea>
+
+                    </div>
+
+                </div>
+
+
+
+            </section>
+
+            <!-- Footer -->
+            <footer class="flex flex-col-reverse gap-3 border-t border-slate-100 bg-slate-50 px-6 py-4 sm:flex-row sm:justify-end">
+
+                <button (click)="closeModal()" type="button" class="rounded-lg border border-slate-200 bg-white px-5 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100">
+                    Cancel
+                </button>
+
+                <button type="submit" class="rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-indigo-700">
+
+                    <i class="fa-solid fa-plus mr-2"></i>
+
+                    Create Product
+
+                </button>
+
+            </footer>
+
+        </form>
+
+    </div>
+
+</div>
+}

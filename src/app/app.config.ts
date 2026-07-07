@@ -1,6 +1,7 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import {dashboardTestInterceptor} from '../core/interceptors/dashboard-test-interceptor';
 
 import { routes } from './app.routes';
 
@@ -13,6 +14,6 @@ export const appConfig: ApplicationConfig = {
         scrollPositionRestoration: 'top',
       }),
     ),
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([dashboardTestInterceptor])),
   ],
 };

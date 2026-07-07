@@ -1,0 +1,53 @@
+@reference "tailwindcss";
+.form-label {
+    @apply text-xs font-bold text-slate-700 uppercase tracking-wider;
+}
+
+.form-input {
+    @apply w-full bg-slate-100/10 text-slate-900 font-medium
+    placeholder-slate-400 border-2 border-slate-300 rounded-lg
+    px-3 py-2 text-sm shadow-sm transition-all
+    focus:outline-none focus:border-black focus:bg-white;
+}
+:is(.form-input,.form-input-price,.form-input-discount,.form-input-disabled,.form-input-icon,.form-textarea,.form-select).ng-invalid.ng-touched{
+    @apply border-red-500;
+}
+
+.form-input-icon {
+    @apply pl-9 pr-3;
+}
+
+.form-input-price {
+    @apply text-emerald-800 font-bold;
+}
+
+.form-input-discount {
+    @apply text-green-600 font-bold;
+}
+
+.form-input-disabled {
+    @apply w-full bg-slate-200/60 text-slate-500 font-bold
+    border-2 border-slate-300/70 rounded-lg
+    px-3 py-2 text-sm cursor-not-allowed shadow-inner;
+}
+
+.form-textarea {
+    @apply w-full bg-slate-100/10 text-slate-900 font-medium
+    placeholder-slate-400 border-2 border-slate-300 rounded-lg
+    px-3 py-2 text-sm resize-none shadow-sm transition-all
+    focus:outline-none focus:border-black focus:bg-white;
+}
+.form-select {
+    @apply w-full appearance-none bg-slate-100/10 text-slate-900
+    font-medium border-2 border-slate-300 rounded-lg
+    px-3 py-2 text-sm shadow-sm transition-all
+    focus:outline-none focus:border-black focus:bg-white
+    cursor-pointer;
+}
+.form-error {
+    @apply mt-1 flex items-center gap-1.5 text-sm text-red-500;
+}
+
+.form-select > option {
+    @apply text-slate-900 hover:bg-red-300;
+}
