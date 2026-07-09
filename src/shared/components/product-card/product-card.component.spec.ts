@@ -16,18 +16,18 @@ describe('ProductCardComponent', () => {
     fixture = TestBed.createComponent(ProductCardComponent);
     component = fixture.componentInstance;
     component.product = {
-      id: 1,
-      name: 'Test Product',
-      description: 'Test Description',
-      pictureUrl: 'test-url',
-      price: 100,
-      stockQuantity: 10,
-      inStock: true,
-      productBrand: 'Brand',
-      productType: 'Type',
-      categories: [],
-      discount: null,
-      finalPrice: 100
+      Id: 1,
+      Name: 'Test Product',
+      Description: 'Test Description',
+      PictureUrl: 'test-url',
+      Price: 100,
+      StockQuantity: 10,
+      InStock: true,
+      ProductBrand: 'Brand',
+      SubCategory: 'SubCategory',
+      CategoryId: 1,
+      CategoryName: 'CategoryName',
+      Discount: 0
     };
     await fixture.whenStable();
   });

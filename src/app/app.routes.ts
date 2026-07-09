@@ -19,9 +19,11 @@ import { CustomerProfileComponent } from '../admin/pages/customers-admin/custome
 import { CustomersListComponent } from '../admin/pages/customers-admin/customers-list/customers-list.component';
 import { ViewProductComponent } from '../admin/components/view-product/view-product.component';
 import { EditProductComponent } from '../admin/components/edit-product/edit-product.component';
+import { ProfileComponent } from '../features/profile/profile.component';
+
+
 export const routes: Routes = [
-  { path: '', redirectTo: 'admin/all-products/product', pathMatch: 'full' },
-  {
+   {
     path: '',
     component: MainComponent,
     children: [
@@ -36,6 +38,7 @@ export const routes: Routes = [
       { path: 'products', component: ProductsComponent },
       { path: 'cart', component: CartComponent },
       { path: 'checkout', component: CheckoutComponent },
+      { path: 'profile', component: ProfileComponent },
     ],
   },
   {

@@ -20,7 +20,7 @@ export class BestSellersComponent implements OnInit {
   loadProducts() {
     this._products.getAllProducts().subscribe({
       next: (res: any) => {
-        this.products.set(res.data);
+        this.products.set(res.Data ?? res.data ?? []);
       },
       error: (err) => {
         console.error('Failed to load best sellers products:', err);
