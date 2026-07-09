@@ -20,7 +20,9 @@
           "skipTests": true
         },
         "@schematics/angular:interface": {
-          "type": "interface"        }
+          "type": "interface"
+        }
+
       },
       "root": "",
       "sourceRoot": "src",
