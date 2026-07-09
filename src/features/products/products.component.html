@@ -1,74 +1,106 @@
-<div class="flex flex-col lg:flex-row gap-8 py-10">
-  <!-- Filters -->
-  <div class="w-full lg:w-[280px] flex flex-col gap-5">
-    <h2 class="font-bold text-2xl">FILTERS</h2>
+<!-- Filter Bar -->
+<div class="w-full bg-gray-50 border-b border-gray-200 py-4 px-4 mb-8">
+  <div class="max-w-7xl mx-auto">
+    <div class="flex flex-wrap items-center gap-3">
 
-    <div class="border border-gray-400 p-4">
-      <h2 class="text-black text-xl font-medium mb-4">CATEGORIES</h2>
-
-      <div class="flex flex-col gap-3 text-gray-500">
-        <label class="flex gap-2">
-          <input type="checkbox" />
-          <span>Men</span>
-        </label>
-
-        <label class="flex gap-2">
-          <input type="checkbox" />
-          <span>Women</span>
-        </label>
-
-        <label class="flex gap-2">
-          <input type="checkbox" />
-          <span>Kids</span>
-        </label>
-      </div>
-    </div>
-
-    <div class="border border-gray-400 p-4">
-      <h2 class="text-black text-xl font-medium mb-4">TYPE</h2>
-
-      <div class="flex flex-col gap-3 text-gray-500">
-        <label class="flex gap-2">
-          <input type="checkbox" />
-          <span>Topwear</span>
-        </label>
-
-        <label class="flex gap-2">
-          <input type="checkbox" />
-          <span>Bottomwear</span>
-        </label>
-
-        <label class="flex gap-2">
-          <input type="checkbox" />
-          <span>Winterwear</span>
-        </label>
-      </div>
-    </div>
-  </div>
-
-  <!-- Products -->
-  <div class="flex-1">
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-2 mb-6">
-      <app-title text1="ALL" text2="COLLECTIONS" />
-
-      <div class="border border-gray-400 p-2 w-full sm:w-48">
-        <select class="w-full outline-none">
-          <option>Sort By : Relevant</option>
-          <option>Sort By : Low to High</option>
-          <option>Sort By : High to Low</option>
+      <!-- Category -->
+      <div class="flex-1 min-w-[160px]">
+        <select
+          class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm bg-white outline-none focus:border-black transition"
+          [(ngModel)]="selectedCategoryId"
+          (ngModelChange)="onFilterChange()"
+        >
+          <option [ngValue]="null">All Categories</option>
+          @for (cat of categories(); track cat.Id) {
+            <option [ngValue]="cat.Id">{{ cat.Name }}</option>
+          }
         </select>
       </div>
+
+      <!-- SubCategory -->
+      <div class="flex-1 min-w-[160px]">
+        <select
+          class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm bg-white outline-none focus:border-black transition"
+          [(ngModel)]="selectedSubCategoryId"
+          (ngModelChange)="onFilterChange()"
+        >
+          <option [ngValue]="null">All SubCategories</option>
+          @for (sub of subCategories(); track sub.Id) {
+            <option [ngValue]="sub.Id">{{ sub.Name }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Brand -->
+      <div class="flex-1 min-w-[160px]">
+        <select
+          class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm bg-white outline-none focus:border-black transition"
+          [(ngModel)]="selectedBrandId"
+          (ngModelChange)="onFilterChange()"
+        >
+          <option [ngValue]="null">All Brands</option>
+          @for (brand of brands(); track brand.Id) {
+            <option [ngValue]="brand.Id">{{ brand.Name }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Price Range -->
+      <div class="flex-1 min-w-[160px]">
+        <select
+          class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm bg-white outline-none focus:border-black transition"
+          [(ngModel)]="selectedPriceRange"
+        >
+          <option value="">All Prices</option>
+          <option value="under-250">Under $250</option>
+          <option value="250-500">$250 - $500</option>
+          <option value="500-1000">$500 - $1000</option>
+          <option value="1000-5000">$1000 - $5000</option>
+          <option value="over-5000">Over $5000</option>
+        </select>
+      </div>
+
+      <!-- Sort -->
+      <div class="flex-1 min-w-[160px]">
+        <select
+          class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm bg-white outline-none focus:border-black transition"
+          [(ngModel)]="selectedSort"
+          (ngModelChange)="onFilterChange()"
+        >
+          <option value="">Sort By: Default</option>
+          <option value="priceAsc">Price: Low to High</option>
+          <option value="priceDesc">Price: High to Low</option>
+        </select>
+      </div>
+
+      <!-- Clear Filters -->
+      <button
+        (click)="clearFilters()"
+        class="px-4 py-2.5 text-sm font-medium text-white bg-black rounded-lg hover:bg-gray-800 transition"
+      >
+        Clear
+      </button>
+
     </div>
 
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
-      <!-- @for (product of products; track $index) {
-      <app-product-card [product]="product"></app-product-card>
-      } -->
-      @for (item of products(); track item.id) {
-        <app-product-card [product]="item" />
-      } @empty {
-        <p class="text-center text-gray-500 col-span-full">There are no products to display.</p>
-      }
-    </div>
+    <!-- Results count -->
+    <p class="text-xs text-gray-500 mt-2">
+      Showing {{ filteredProducts().length }} of {{ totalCount() }} products
+    </p>
+  </div>
+</div>
+
+<!-- Products Grid -->
+<div class="max-w-7xl mx-auto px-4">
+  <div class="flex items-center justify-between mb-6">
+    <app-title text1="ALL" text2="COLLECTIONS" />
+  </div>
+
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
+    @for (item of filteredProducts(); track item.Id) {
+      <app-product-card [product]="item" />
+    } @empty {
+      <p class="text-center text-gray-500 col-span-full py-10">There are no products to display.</p>
+    }
   </div>
 </div>

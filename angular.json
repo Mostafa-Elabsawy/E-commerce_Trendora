@@ -22,6 +22,7 @@
         "@schematics/angular:interface": {
           "type": "interface"
         }
+
       },
       "root": "",
       "sourceRoot": "src",

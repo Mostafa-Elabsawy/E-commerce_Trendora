@@ -1,15 +1,17 @@
 import { Component } from '@angular/core';
-import { ReactiveFormsModule ,FormGroup,FormControl,Validators} from '@angular/forms';
+import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { debounceTime } from 'rxjs';
-import {RouterLink} from '@angular/router';
+import { RouterLink } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-log-in',
-  imports: [ReactiveFormsModule , RouterLink],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './log-in.component.html',
   styleUrl: './log-in.component.css',
 })
 export class LogInComponent {
+  constructor(private _authS: AuthService) { }
 
   email = new FormControl('', {
     nonNullable: true,
@@ -24,16 +26,25 @@ export class LogInComponent {
     password: this.password,
   });
   onSubmit() {
-    console.log("data submited succesfully");
-    
-    let data = this.loginForm.getRawValue;
-    /**/
-    
-    
+    if (this.loginForm.valid) {
+      let data = this.loginForm.getRawValue();
+      this.login(data);
+    }
+  }
+
+  login(data: any) {
+    this._authS.login(data).subscribe({
+      next: (res: any) => {
+        console.log('Login successful:', res);
+      },
+      error: (err) => {
+        console.error('Failed to login:', err);
+      },
+    });
   }
   ngAfterViewInit() {
     this.loginForm.valueChanges.subscribe(() => {
       console.log(this.loginForm.value);
-    })  
+    })
   }
 }
