@@ -4,7 +4,7 @@ import { CreateProdcutComponent } from '../create-prodcut/create-prodcut.compone
 
 @Component({
   selector: 'app-products-admin-main',
-  imports: [ RouterOutlet,CreateProdcutComponent],
+  imports: [ RouterOutlet],
   templateUrl: './products-admin-layout.component.html',
   styleUrl: './products-admin-layout.component.css',
 })

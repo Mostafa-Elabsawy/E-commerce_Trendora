@@ -1,5 +1,4 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { LookupItem } from '../../admin/pages/products-admin/edit-product/edit-add-product.component';
 import { Brand, Category, SubCategory } from '../models/types.interface';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment.prod';

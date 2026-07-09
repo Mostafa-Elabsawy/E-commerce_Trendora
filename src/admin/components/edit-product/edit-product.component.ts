@@ -1,19 +1,16 @@
 import { CurrencyPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import {
-    FormBuilder,
     FormControl,
     FormGroup,
     ReactiveFormsModule,
     Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Category, SubCategory } from '../../../core/models/types.interface';
+import { Category } from '../../../core/models/types.interface';
 import { TypesService } from '../../../core/services/types.service';
-interface LookupItem {
-    id: number;
-    name: string;
-}
+import { ProductsAdminService } from '../../../core/services/Admin/products-admin.service';
+import { UpdateProduct } from '../../../core/models/Admin/products-admin.interface';
 @Component({
     selector: 'app-edit-product',
     standalone: true,
@@ -21,12 +18,13 @@ interface LookupItem {
     templateUrl: './edit-product.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EditProductComponent {
+export class EditProductComponent implements OnInit {
     TypesService = inject(TypesService);
+    private productsAdminService = inject(ProductsAdminService);
+    private router = inject(Router);
+    private route = inject(ActivatedRoute);
 
-    Categorys = signal<Category[]>([]);
-    SubCategories = signal<SubCategory[]>([]);
-    Brands = signal<string[]>([]);
+    private productId = 0;
 
     loading = signal(false);
     saving = signal(false);
@@ -87,24 +85,24 @@ export class EditProductComponent {
         categoryName: this.categoryName,
         subCategory: this.subCategory,
     });
-    ngOnChanges(): void {
-        // Replace with API call
-        const product = {
-            id,
-            name: 'Adidas Adjustable Dumbbell Set',
-            description: 'Adjustable dumbbell set ideal for home workouts.',
-            pictureUrl:
-                'https://ahmedkhalid25-001-site1.etempurl.com//Images/Products/AdidasDumbbellSet.jpg',
-            price: 1899,
-            discount: 0,
-            stockQuantity: 50,
-            productBrand: 'Adidas',
-            categoryName: 'Sports & Outdoors',
-            subCategory: 'Fitness Equipment',
-        };
-
-        this.editForm.patchValue(product);
-        this.imagePreview.set(product.pictureUrl);
+    ngOnInit(): void {
+        this.route.params.subscribe((params) => {
+            this.productId = +params['id'];
+            if (this.productId) {
+                this.loading.set(true);
+                this.productsAdminService.getProductById(this.productId).subscribe({
+                    next: (product) => {
+                        this.editForm.patchValue(product);
+                        this.imagePreview.set(product.pictureUrl);
+                        this.loading.set(false);
+                    },
+                    error: (err) => {
+                        console.error('Error loading product:', err);
+                        this.loading.set(false);
+                    },
+                });
+            }
+        });
 
         this.editForm.controls.pictureUrl.valueChanges.subscribe((url) => {
             this.imagePreview.set(url);
@@ -118,10 +116,44 @@ export class EditProductComponent {
         }
 
         this.saving.set(true);
+        const formValue = this.editForm.getRawValue();
 
-        console.log(this.editForm.getRawValue());
+        const brand = this.TypesService.brands().find(
+            (b) => b.name === formValue.productBrand
+        );
 
-        // this.productsService.updateProduct(id, dto).subscribe(...)
+        let subCategoryId = 0;
+        for (const cat of this.TypesService.categorys()) {
+            const sub = cat.subCategories.find(
+                (s) => s.name === formValue.subCategory
+            );
+            if (sub) {
+                subCategoryId = sub.id;
+                break;
+            }
+        }
+
+        const dto: UpdateProduct = {
+            name: formValue.name,
+            description: formValue.description,
+            pictureUrl: formValue.pictureUrl,
+            price: formValue.price,
+            discount: formValue.discount,
+            stockQuantity: formValue.stockQuantity,
+            brandId: brand?.id ?? 0,
+            subCategoryId,
+        };
+
+        this.productsAdminService.updateProduct(this.productId, dto).subscribe({
+            next: () => {
+                this.saving.set(false);
+                this.router.navigate(['../'], { relativeTo: this.route });
+            },
+            error: (err) => {
+                console.error('Error updating product:', err);
+                this.saving.set(false);
+            },
+        });
     }
 
     cancel(): void {

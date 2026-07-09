@@ -10,7 +10,6 @@ import { CartComponent } from '../features/cart/cart.component';
 import { AdminMainComponent } from '../admin/layout/admin-main/admin-main.component';
 import { OverviewAdminComponent } from '../admin/pages/overview-admin/overview-admin.component';
 import { AllProductsAdminComponent } from '../admin/pages/products-admin/products/products-admin.component';
-import { EditAddProductAdminComponent } from '../admin/pages/products-admin/edit-product/edit-add-product.component';
 import { ProductsAdminLayoutComponent } from '../admin/pages/products-admin/main/products-admin-layout.component';
 import { CustomersAdminComponent } from '../admin/pages/customers-admin/main/customers-admin.component';
 import { OrdersAdminComponent } from '../admin/pages/orders-admin/orders-admin.component';
@@ -58,8 +57,6 @@ export const routes: Routes = [
             path: 'edit/:id',
             component: EditProductComponent,
           },
-          { path: 'add', component: EditAddProductAdminComponent },
-          { path: ':id', component: EditAddProductAdminComponent },
         ],
       },
       {
