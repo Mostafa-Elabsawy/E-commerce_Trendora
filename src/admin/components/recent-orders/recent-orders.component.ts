@@ -6,7 +6,7 @@ import { DashboardRecentOrders } from '../../../core/models/Admin/overview.inter
 
 @Component({
   selector: 'app-recent-orders',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './recent-orders.component.html',
   styleUrl: './recent-orders.component.css',
 })

@@ -6,7 +6,7 @@ import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-customers-admin',
-  imports: [RouterOutlet,CustomerFiltersComponent, CustomersListComponent, CustomerProfileComponent , ],
+  imports: [RouterOutlet],
   templateUrl: './customers-admin.component.html',
   styleUrl: './customers-admin.component.css',
 })

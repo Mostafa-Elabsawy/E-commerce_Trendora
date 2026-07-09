@@ -1,17 +1,18 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  DestroyRef,
-  computed,
   inject,
+  OnInit,
   signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterLink } from '@angular/router';
-import { ProductsAdmin } from '../../../../core/models/Admin/products-admin.interface';
+import {
+  ProductAdmin,
+  ProductFilterParams,
+} from '../../../../core/models/Admin/products-admin.interface';
+import { ProductsAdminService } from '../../../../core/services/Admin/products-admin.service';
+import { TypesService } from '../../../../core/services/types.service';
 import { ProductAdminFilterComponent } from '../product-admin-filter/product-admin-filter.component';
 import { CreateProdcutComponent } from '../create-prodcut/create-prodcut.component';
 
@@ -20,7 +21,6 @@ import { CreateProdcutComponent } from '../create-prodcut/create-prodcut.compone
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
     RouterLink,
     ProductAdminFilterComponent,
     CreateProdcutComponent,
@@ -28,83 +28,52 @@ import { CreateProdcutComponent } from '../create-prodcut/create-prodcut.compone
   templateUrl: './products-admin.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AllProductsAdminComponent {
+export class AllProductsAdminComponent implements OnInit {
+  private productsAdminService = inject(ProductsAdminService);
+  TypesService = inject(TypesService);
+  router = inject(Router);
+
   // ---------------- STATE ----------------
-  createProduct = signal<boolean>(false);
+  readonly products = signal<ProductAdmin[]>([]);
+  readonly loading = signal(false);
+
+  // ---------------- FILTERS ----------------
+  readonly filters = signal<ProductFilterParams>({
+    pageNumber: 1,
+    pageSize: 20,
+  });
+
+  // ---------------- MODAL STATE ----------------
+  createProduct = signal(false);
+  dialogState = signal(false);
+  selectedProduct = signal<ProductAdmin | null>(null);
+
+  ngOnInit(): void {
+    this.loadProducts();
+  }
+
+  private loadProducts(): void {
+    this.loading.set(true);
+    this.productsAdminService.getAllProductsAdmin(this.filters()).subscribe({
+      next: (result) => {
+        this.products.set(result.data);
+        this.loading.set(false);
+      },
+      error: (err) => {
+        console.error('Error loading products:', err);
+        this.loading.set(false);
+      },
+    });
+  }
+
   closeCreateModal() {
     this.createProduct.set(false);
   }
+
   openCreateModal() {
     this.createProduct.set(true);
   }
-  router = inject(Router);
-  readonly products = signal<ProductsAdmin[]>([
-    {
-      id: 1001,
-      name: 'Oversized Silk Shirt',
-      categoryId: 1,
-      typeId: 2,
-      brandId: 1,
-      price: 120,
-      stockQuantity: 45,
-      pictureUrl: '',
-      discount: 10,
-      description: 'Premium silk oversized shirt with modern fit.',
-    },
-    {
-      id: 1002,
-      name: 'Velvet Blazer',
-      categoryId: 1,
-      typeId: 2,
-      brandId: 1,
-      price: 299,
-      stockQuantity: 3,
-      discount: 15,
-      pictureUrl: '',
-      description: 'Luxury velvet blazer perfect for formal events.',
-    },
-    {
-      id: 1003,
-      name: 'Leather Tote',
-      categoryId: 2,
-      typeId: 3,
-      brandId: 1,
-      price: 450,
-      stockQuantity: 0,
-      discount: 20,
-      pictureUrl: '',
-      description: 'High-quality leather tote bag with premium finish.',
-    },
-  ]);
 
-  readonly categories = ['Apparel', 'Accessories', 'Footwear'] as const;
-
-  // ---------------- MODAL STATE ----------------
-
-  selectedProduct = signal<ProductsAdmin>({
-    id: 1001,
-    name: 'Oversized Silk Shirt',
-    categoryId: 1,
-    typeId: 2,
-    brandId: 3,
-    price: 120,
-    stockQuantity: 45,
-    pictureUrl: '',
-    discount: 10,
-    description: 'Premium silk oversized shirt with modern fit.',
-  });
-  // ---------------- FILTERS ----------------
-
-  constructor() {
-    //   this.filterForm.valueChanges
-    //     .pipe(debounceTime(250), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
-    //     .subscribe(() => {
-    //       this.filters.set(this.filterForm.getRawValue());
-    //     });
-    // }
-    // ---------------- COMPUTED ----------------
-    // ---------------- MODAL ACTIONS ----------------
-  }
   stockDotClass(stock: number): string {
     if (stock === 0) return 'bg-rose-500';
     if (stock <= 10) return 'bg-amber-500';
@@ -116,15 +85,18 @@ export class AllProductsAdminComponent {
     if (stock <= 10) return 'text-amber-600';
     return 'text-slate-700';
   }
-  dialogState = signal(false);
-  openViewDialog(product: ProductsAdmin): void {
+
+  openViewDialog(product: ProductAdmin): void {
     this.selectedProduct.set(product);
     this.dialogState.set(true);
   }
 
   openEditModal() {
     this.dialogState.set(false);
-    this.router.navigate(['/admin/products/456']);
+    const id = this.selectedProduct()?.id;
+    if (id) {
+      this.router.navigate(['/admin/products/edit', id]);
+    }
   }
 
   closeModal() {
@@ -132,10 +104,18 @@ export class AllProductsAdminComponent {
   }
 
   deleteProduct(id: number | undefined) {
-    if (id) {
-      /*delete service call*/
-    }
+    if (!id) return;
+    this.productsAdminService.deleteProduct(id).subscribe({
+      next: () => {
+        this.loadProducts();
+        this.closeModal();
+      },
+      error: (err) => console.error('Error deleting product:', err),
+    });
   }
 
-  clearFilters() {}
+  clearFilters() {
+    this.filters.set({ pageNumber: 1, pageSize: 20 });
+    this.loadProducts();
+  }
 }
