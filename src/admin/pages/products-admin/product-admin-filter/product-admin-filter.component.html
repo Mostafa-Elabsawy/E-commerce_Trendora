@@ -1,77 +1,81 @@
-<!-- Filters -->
-<section class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-    <form class="grid gap-4 md:grid-cols-4" [formGroup]="filterForm">
-        <!-- Search -->
-        <div class="md:col-span-2">
-            <label class="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">
-                Search
-            </label>
-            <input type="text" [formControl]="filterForm.controls.search" placeholder="Search products..." class="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-sm outline-none transition focus:border-indigo-500 focus:bg-white" />
-
+<section class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+    <header class="flex justify-between mb-4">
+        <div>
+            <p class="text-black font-bold text-xl"> Filter Products</p>
         </div>
 
-        <!-- Category -->
-        <div>
+        <div class="flex justify-end items-center gap-2 pt-2 border-t border-slate-100 mt-2 xl:mt-0 xl:pt-0 xl:border-0">
+            <button type="button" (click)="applyFilters()" class="btn-primary flex-1 sm:flex-none flex items-center justify-center gap-2 px-6">
+                <i class="fa-solid fa-filter"></i>
+                Apply Filters
+            </button>
 
-            <label class="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <button type="button" (click)="clearFilters()" class="btn-secondary flex items-center justify-center gap-2" title="Clear Filters">
+                <i class="fa-solid fa-rotate-left"></i>
+                <span class="xl:hidden">Reset</span>
+            </button>
+        </div>
+    </header>
+
+    <form class="grid gap-4 sm:grid-cols-2  lg:grid-cols-4  items-end" [formGroup]="filterForm">
+
+
+
+        <div>
+            <label class="filter-label">
+                Brand
+            </label>
+            <select [formControl]="filterForm.controls.brandId" class="filter-control">
+                <option [ngValue]="null">All Brands</option>
+                @for (brand of brands(); track brand.id) {
+                <option [ngValue]="brand.id">{{ brand.name }}</option>
+                }
+            </select>
+        </div>
+
+        <div>
+            <label class="filter-label">
                 Category
             </label>
-
-            <select [formControl]="filterForm.controls.category" class="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-sm outline-none transition focus:border-indigo-500 focus:bg-white">
-
-                <option value="">
-                    All Categories
-                </option>
-
-                @for (category of categories; track category) {
-                <option [value]="category">
-                    {{ category }}
-                </option>
+            <select [formControl]="filterForm.controls.categoryId" (change)="filterForm.controls.subCategoryId.setValue(null)" class="filter-control">
+                <option [ngValue]="null">All Categories</option>
+                @for (cat of categories(); track cat.id) {
+                <option [ngValue]="cat.id">{{ cat.name }}</option>
                 }
-
             </select>
-
         </div>
 
-        <!-- Sort -->
         <div>
+            <label class="filter-label">
+                Subcategory
+            </label>
+            <select [formControl]="filterForm.controls.subCategoryId" class="filter-control">
+                <option [ngValue]="null">All Subcategories</option>
+                @for (sub of filteredSubCategories(); track sub.id) {
+                <option [ngValue]="sub.id">{{ sub.name }}</option>
+                }
+            </select>
+        </div>
 
-            <label class="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+        <div>
+            <label class="filter-label">
                 Sort By
             </label>
-
-            <div class="flex gap-2">
-
-                <select [formControl]="filterForm.controls.sortBy" class="flex-1 rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-sm outline-none transition focus:border-indigo-500 focus:bg-white">
-
-                    <option value="name-asc">
-                        Name A-Z
-                    </option>
-
-                    <option value="name-desc">
-                        Name Z-A
-                    </option>
-
-                    <option value="price-asc">
-                        Price Low → High
-                    </option>
-
-                    <option value="price-desc">
-                        Price High → Low
-                    </option>
-
-                </select>
-
-                <button type="button" (click)="clearFilters()" class="rounded-lg border border-slate-200 bg-slate-100 px-3 transition hover:bg-slate-200">
-
-                    <i class="fa-solid fa-rotate-left"></i>
-
-                </button>
-
-            </div>
-
+            <select [formControl]="filterForm.controls.sort" class="filter-control">
+                <option [ngValue]="null">Sorted By</option>
+                @for (item of ["NameAsc" ,"NameDesc" ,"PriceAsc ", "PriceDesc" ]; track $index) {
+                <option [ngValue]="item">{{item}}</option>
+                }
+            </select>
+        </div>
+        <div class="sm:col-span-full">
+            <label class="filter-label">
+                Search
+            </label>
+            <input type="text" [formControl]="filterForm.controls.search" placeholder="Search products..." class="filter-control" />
         </div>
 
     </form>
+
 
 </section>

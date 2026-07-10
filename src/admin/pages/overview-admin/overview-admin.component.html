@@ -15,11 +15,11 @@
     </section>
     <div class="grid grid-cols-1  gap-6 items-start">
         <section aria-label="Recent Store Purchases Log" class="lg:col-span-2 h-full">
-            <app-recent-orders></app-recent-orders>
+            <app-recent-orders [recentOrders]="recentOrders()" />
         </section>
     </div>
     
     <section aria-label="System Inventory Warnings">
-        <app-low-stock-products [products]="topProducts()"></app-low-stock-products>
+        <app-top-products [products]="topProducts()"></app-top-products>
     </section>
 </div>

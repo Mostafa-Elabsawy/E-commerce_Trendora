@@ -24,6 +24,6 @@ export interface DashboardTopProducts {
   productId: number;
   productName: string;
   pictureUrl: string;
-  totalSold: number;
+  totalQuantitySold: number;
   totalRevenue: number;
 }
