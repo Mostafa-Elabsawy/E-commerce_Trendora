@@ -27,7 +27,7 @@ export class RelatedProductsComponent implements OnChanges {
       next: (res: any) => {
         let list = res.Data ?? res.data ?? [];
         if (this.excludeProductId) {
-          list = list.filter((p: IProduct) => p.Id !== this.excludeProductId);
+          list = list.filter((p: IProduct) => p.id !== this.excludeProductId);
         }
         this.products.set(list.slice(0, 10));
       },

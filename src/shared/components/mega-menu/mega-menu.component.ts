@@ -18,7 +18,7 @@ export class MegaMenuComponent implements OnInit {
     private _categories: CategoryService,
     private _subCategory: SubCategoryService,
     private _products: ProductService,
-  ) {}
+  ) { }
 
   categories = signal<Category[]>([]);
   subCategories = signal<SubCategory[]>([]);
@@ -34,6 +34,8 @@ export class MegaMenuComponent implements OnInit {
     this._categories.getAllCategories().subscribe({
       next: (res: any) => {
         this.categories.set(res);
+        // console.log(res);
+
       },
       error: (err) => {
         console.error('Failed to load categories:', err);
@@ -45,6 +47,8 @@ export class MegaMenuComponent implements OnInit {
     this._subCategory.getAllSubCategories().subscribe({
       next: (res: any) => {
         this.subCategories.set(res);
+        // console.log(res);
+
       },
       error: (err) => {
         console.error('Failed to load subcategories:', err);
@@ -65,7 +69,7 @@ export class MegaMenuComponent implements OnInit {
 
   getProductsBySubCategory(subCategoryName: string): IProduct[] {
     return this.products()
-      .filter((p) => p.SubCategory === subCategoryName)
+      .filter((p) => p.subCategory === subCategoryName)
       .slice(0, 10);
   }
 }

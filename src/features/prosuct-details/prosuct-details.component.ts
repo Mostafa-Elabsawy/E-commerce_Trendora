@@ -5,6 +5,8 @@ import { RelatedProductsComponent } from "../related-products/related-products.c
 import { AsyncPipe } from '@angular/common';
 import { map, Observable, switchMap } from 'rxjs';
 import { IProduct } from '../../core/models/product.interface';
+import { CartService } from '../../core/services/cart.service';
+import { ICart, ICartItem } from '../../core/models/cart.interface';
 
 @Component({
   selector: 'app-prosuct-details',
@@ -14,14 +16,41 @@ import { IProduct } from '../../core/models/product.interface';
 })
 export class ProsuctDetailsComponent {
   product$: Observable<IProduct>;
+  cartItems: ICartItem[] = [];
 
   constructor(
     private _activedRoute: ActivatedRoute,
     private _productService: ProductService,
+    private cartService: CartService
   ) {
     this.product$ = this._activedRoute.paramMap.pipe(
       map((params) => params.get('id')!),
       switchMap((id) => this._productService.grtProductById(id))
     );
+  }
+  // addToCart(product: IProduct) {
+  //   this.cartItems.push({
+  //     id: product.id,
+  //     productName: product.name,
+  //     pictureUrl: product.pictureUrl,
+  //     quantity: 1,
+  //     price: product.price,
+  //   });
+
+  //   const cart: any = {
+  //     items: this.cartItems,
+  //   };
+
+  addToCart(product: IProduct) {
+    const newItem: ICartItem = {
+      id: product.id,
+      productName: product.name,
+      pictureUrl: product.pictureUrl,
+      quantity: 1,
+      price: product.price,
+    };
+    
+    // Use the central service method that manages the state correctly
+    this.cartService.addItemToCart(newItem);
   }
 }
