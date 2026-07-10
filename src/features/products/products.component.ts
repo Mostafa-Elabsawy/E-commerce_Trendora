@@ -23,7 +23,7 @@ export class ProductsComponent implements OnInit {
     private _categories: CategoryService,
     private _subCategories: SubCategoryService,
     private _brands: BrandService,
-  ) {}
+  ) { }
 
   allProducts = signal<IProduct[]>([]);
   categories = signal<Category[]>([]);
@@ -76,7 +76,7 @@ export class ProductsComponent implements OnInit {
     this._products.getAllProducts(params).subscribe({
       next: (res: any) => {
         this.allProducts.set(res.data ?? []);
-        this.totalCount.set( res.count ?? 0);
+        this.totalCount.set(res.count ?? 0);
       },
       error: (err) => {
         console.error('Failed to load products:', err);
