@@ -35,26 +35,27 @@ export class ProductsComponent implements OnInit {
   selectedSubCategoryId: number | null = null;
   selectedSort: string = '';
   selectedPriceRange: string = '';
-  pageSize: number = 100;
+  pageSize: number = 10;
+  pageIndex: number = 1;
+  searchQuery: string = '';
 
+  protected readonly Math = Math;
+
+  private readonly priceFilters: Record<string, (price: number) => boolean> = {
+    'under-250': (p) => p < 250,
+    '250-500': (p) => p >= 250 && p <= 500,
+    '500-1000': (p) => p >= 500 && p <= 1000,
+    '1000-5000': (p) => p >= 1000 && p <= 5000,
+    'over-5000': (p) => p > 5000,
+  };
+
+  totalPages = computed(() => Math.ceil(this.totalCount() / this.pageSize));
+  totalPagesArray = computed(() => Array.from({ length: this.totalPages() }, (_, i) => i + 1));
 
   filteredProducts = computed(() => {
-    let list = this.allProducts();
-    if (this.selectedPriceRange) {
-      if (this.selectedPriceRange === 'under-250') {
-        list = list.filter((p) => p.price < 250);
-      } else if (this.selectedPriceRange === '250-500') {
-        list = list.filter((p) => p.price >= 250 && p.price <= 500);
-      } else if (this.selectedPriceRange === '500-1000') {
-        list = list.filter((p) => p.price >= 500 && p.price <= 1000);
-      } else if (this.selectedPriceRange === '1000-5000') {
-        list = list.filter((p) => p.price >= 1000 && p.price <= 5000);
-      } else if (this.selectedPriceRange === 'over-5000') {
-        list = list.filter((p) => p.price > 5000);
-      }
-    }
-
-    return list;
+    const list = this.allProducts();
+    const filterFn = this.priceFilters[this.selectedPriceRange];
+    return filterFn ? list.filter((p) => filterFn(p.price)) : list;
   });
 
   ngOnInit(): void {
@@ -67,11 +68,13 @@ export class ProductsComponent implements OnInit {
   loadProducts() {
     const params: ProductQueryParams = {
       pageSize: this.pageSize,
+      pageIndex: this.pageIndex,
     };
     if (this.selectedCategoryId) params.categoryId = this.selectedCategoryId;
     if (this.selectedBrandId) params.brandId = this.selectedBrandId;
     if (this.selectedSubCategoryId) params.subCategoryId = this.selectedSubCategoryId;
     if (this.selectedSort) params.sort = this.selectedSort;
+    if (this.searchQuery) params.search = this.searchQuery;
 
     this._products.getAllProducts(params).subscribe({
       next: (res: any) => {
@@ -83,6 +86,7 @@ export class ProductsComponent implements OnInit {
       },
     });
   }
+
   loadCategories() {
     this._categories.getAllCategories().subscribe({
       next: (res: any) => {
@@ -93,6 +97,7 @@ export class ProductsComponent implements OnInit {
       },
     });
   }
+
   loadSubCategories() {
     this._subCategories.getAllSubCategories().subscribe({
       next: (res: any) => {
@@ -116,14 +121,30 @@ export class ProductsComponent implements OnInit {
   }
 
   onFilterChange() {
+    this.pageIndex = 1;
     this.loadProducts();
   }
+
+  onSearchChange() {
+    this.pageIndex = 1;
+    this.loadProducts();
+  }
+
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages()) {
+      this.pageIndex = page;
+      this.loadProducts();
+    }
+  }
+
   clearFilters() {
     this.selectedCategoryId = null;
     this.selectedBrandId = null;
     this.selectedSubCategoryId = null;
     this.selectedSort = '';
     this.selectedPriceRange = '';
+    this.searchQuery = '';
+    this.pageIndex = 1;
     this.loadProducts();
   }
 }

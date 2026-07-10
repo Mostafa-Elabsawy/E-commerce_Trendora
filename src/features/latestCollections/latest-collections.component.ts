@@ -28,5 +28,4 @@ export class LatestCollectionsComponent implements OnInit {
         console.error('Failed to load latest collections products:', err);
       },
     });
-  }
-}
+  }}
