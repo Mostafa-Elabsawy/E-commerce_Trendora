@@ -21,7 +21,7 @@ export class AuthService {
   private url = environment.apiURL + 'Authentication';
   private token_key = 'token';
   private user_key = 'user';
-  
+
 
   register(data: any) {
     return this._http.post<any>(`${this.url}/register`, data).pipe(
