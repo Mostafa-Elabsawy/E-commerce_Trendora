@@ -10,7 +10,7 @@
         </div>
 
         <span class="rounded-full bg-indigo-50 px-3 py-1 text-sm font-medium text-indigo-700 border border-indigo-200">
-            {{ recentOrders.length }} Orders
+            {{ recentOrders().length }} Orders
         </span>
     </div>
     <div class="overflow-x-auto max-lg:hidden">
@@ -46,7 +46,7 @@
 
             <tbody class="divide-y divide-gray-100">
 
-                @for (order of recentOrders; track order.id) {
+                @for (order of recentOrders(); track order.id) {
 
                 <tr class="hover:bg-slate-50 transition-colors">
 
@@ -125,7 +125,7 @@
     <!-- Mobile / Tablet -->
     <div class="lg:hidden space-y-6 divide-gray-100">
     
-        @for (order of recentOrders; track order.id) {
+        @for (order of recentOrders(); track order.id) {
     
         <div class="p-4 sm:p-5 border-b-2 border-gray-300">
     

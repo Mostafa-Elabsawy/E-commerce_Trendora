@@ -35,4 +35,33 @@ export class TypesService {
     this.loadCategorys();
     this.loadBrands();
   }
+
+  // ── Brand lookups ──
+  getBrandIdByName(name: string): number | undefined {
+    return this.brands().find((b) => b.name === name)?.id;
+  }
+  getBrandNameById(id: number): string | undefined {
+    return this.brands().find((b) => b.id === id)?.name;
+  }
+
+  // ── Category lookups ──
+  getCategoryIdByName(name: string): number | undefined {
+    return this.categorys().find((c) => c.name === name)?.id;
+  }
+  getCategoryNameById(id: number): string | undefined {
+    return this.categorys().find((c) => c.id === id)?.name;
+  }
+
+  // ── SubCategory lookups ──
+  getSubCategoryIdByName(categoryId: number, name: string): number | undefined {
+    const cat = this.categorys().find((c) => c.id === categoryId);
+    return cat?.subCategories.find((s) => s.name === name)?.id;
+  }
+  getSubCategoryNameById(id: number): string | undefined {
+    for (const cat of this.categorys()) {
+      const found = cat.subCategories.find((s) => s.id === id);
+      if (found) return found.name;
+    }
+    return undefined;
+  }
 }

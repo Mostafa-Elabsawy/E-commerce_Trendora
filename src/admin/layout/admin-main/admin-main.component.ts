@@ -12,7 +12,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
   templateUrl: './admin-main.component.html',
 })
 export class AdminMainComponent {
-  isSidebarOpen = signal<boolean>(true);
+  isSidebarOpen = signal<boolean>(false);
 
   toggleSidebar() {
     this.isSidebarOpen.update(curr => !curr);

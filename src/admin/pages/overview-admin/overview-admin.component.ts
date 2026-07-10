@@ -1,7 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { KpiComponent } from '../../components/kpi/kpi.component';
 import { ChartsComponent } from '../../components/charts/charts.component';
-import { RecentOrdersComponent } from '../../components/recent-orders/recent-orders.component';
+import { RecentOrdersComponent } from './recent-orders/recent-orders.component';
 import { OverviewService } from '../../../core/services/Admin/overview.service';
 import {
   DashboardKPIs,
@@ -9,11 +9,11 @@ import {
   DashboardTopProducts,
   OrderStatus,
 } from '../../../core/models/Admin/overview.interface';
-import { LowStockProductsComponent } from '../../components/low-stock-products/low-stock-products.component';
+import { TopProductsComponent } from './top-products/top-products.component';
 
 @Component({
   selector: 'app-overview-admin',
-  imports: [KpiComponent, ChartsComponent, RecentOrdersComponent,LowStockProductsComponent],
+  imports: [KpiComponent, ChartsComponent, RecentOrdersComponent,TopProductsComponent],
   templateUrl: './overview-admin.component.html',
   styleUrl: './overview-admin.component.css',
 })
@@ -72,6 +72,7 @@ export class OverviewAdminComponent {
         console.log('Dashboard data retrived succesfullt', res);
         this.recentOrders.set(res);
       },
+
       error: (err) => {
         console.error('Failed to load dashboard:', err);
       },
@@ -90,4 +91,9 @@ export class OverviewAdminComponent {
   }
 
   handleCardRouting(route: string) {}
+  constructor() {
+    this.loadDashboardKPIS();
+    this.loadDashboardRecentOrders();
+    this.loadDashboardTopProducts();
+  }
 }

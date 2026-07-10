@@ -21,6 +21,7 @@ export class AuthService {
   private url = environment.apiURL + 'Authentication';
   private token_key = 'token';
   private user_key = 'user';
+  
 
   register(data: any) {
     return this._http.post<any>(`${this.url}/register`, data).pipe(
@@ -53,7 +54,7 @@ export class AuthService {
             if (decode?.role) {
 
               if (decode.role === 'Admin') {
-                this._router.navigate(['/dashboard']);
+                this._router.navigate(['/admin']);
               } else {
                 this._router.navigate(['/home']);
               }
