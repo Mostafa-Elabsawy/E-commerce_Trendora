@@ -1,0 +1,112 @@
+<div class="min-h-screen">
+
+    <!-- Back Button -->
+    <button routerLink="/admin/products" class="mb-6 inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2">
+        <i class="fa-solid fa-arrow-left"></i>
+        Back to Products
+    </button>
+
+    <!-- Main Card -->
+    <div class="rounded-2xl md:rounded-3xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+
+            <!-- Image Area -->
+            <div class="lg:col-span-2 bg-slate-50 p-4 md:p-6 flex items-center justify-center">
+                <div class="w-full aspect-square overflow-hidden rounded-xl md:rounded-2xl border border-slate-200 bg-white shadow-inner">
+                    <img [src]="product().pictureUrl" [alt]="product().name" class="w-full h-full object-cover transition-transform duration-300 hover:scale-105">
+                </div>
+            </div>
+
+            <!-- Details Area -->
+            <div class="lg:col-span-2 p-5 md:p-8 flex flex-col justify-between">
+                <div>
+                    <!-- Header with Title & Stock Badge -->
+                    <div class="flex flex-col  items-start justify-between gap-4">
+                        <span class="self-start sm:self-auto rounded-full px-3 py-1.5 text-xs md:text-sm font-semibold tracking-wide border shadow-sm" [class]="product().inStock
+                                                                                ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                                                                : 'bg-rose-50 text-rose-700 border-rose-200'">
+                            <span class="inline-block w-2 h-2 rounded-full mr-1.5" [class]="product().inStock ? 'bg-emerald-500' : 'bg-rose-500'"></span>
+                            {{ product().inStock ? 'In Stock' : 'Out of Stock' }}
+                        </span>
+                        <div class="space-y-1">
+                            <h1 class="text-base sm:text-lg  md:text-xl lg:text-2xl font-extrabold tracking-tight text-slate-900">
+                                {{ product().name }}
+                            </h1><p class="text-xs md:text-sm font-medium text-slate-400">
+                                Product ID: <span class=" font-mono">#{{ product().id }}</span>
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Metadata Grid -->
+                    <div class="mt-8 grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-2 border-t border-slate-100 pt-6">
+                        <div>
+                            <p class="text-xs font-semibold text-slate-400 tracking-wider uppercase">Brand</p>
+                            <p class="mt-1 text-sm md:text-base font-medium text-slate-800">{{ product().productBrand }}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-semibold text-slate-400 tracking-wider uppercase">Stock Quantity</p>
+                            <p class="mt-1 text-sm md:text-base font-medium text-slate-800">{{ product().stockQuantity }}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-semibold text-slate-400 tracking-wider uppercase">Category</p>
+                            <p class="mt-1 text-sm md:text-base font-medium text-slate-800">{{ product().categoryName }}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-semibold text-slate-400 tracking-wider uppercase">Sub Category</p>
+                            <p class="mt-1 text-sm md:text-base font-medium text-slate-800">{{ product().subCategory || 'N/A' }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Price Badges Widget -->
+                <div class="mt-8 grid grid-cols-1 sm:grid-cols-4 gap-3 md:gap-4">
+                    <div class=" sm:col-span-2 rounded-xl border border-slate-100 bg-slate-50/60 p-4 shadow-sm">
+                        <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Original Price</p>
+                        <h3 class="mt-1 text-xl md:text-2xl font-bold text-slate-900">
+                            {{ product().price | currency:'EGP':'symbol':'1.0-0' }}
+                        </h3>
+                    </div>
+                    <div class=" sm:col-span-2 rounded-xl border border-amber-100 bg-amber-50/60 p-4 shadow-sm">
+                        <p class="text-xs font-medium text-amber-800 uppercase tracking-wider">Discount</p>
+                        <h3 class="mt-1 text-xl md:text-2xl font-bold text-amber-700">
+                            {{ product().discount }}%
+                        </h3>
+                    </div>
+                    <div class="rounded-xl border border-emerald-100 bg-emerald-50 p-4 shadow-sm sm:col-start-2 sm:col-span-2">
+                        <p class="text-xs font-medium text-emerald-800 uppercase tracking-wider">Final Price</p>
+                        <h3 class="mt-1 text-xl md:text-2xl font-extrabold text-emerald-700">
+                            {{ product().price - (product().price * product().discount / 100) | currency:'EGP':'symbol':'1.0-0' }}
+                        </h3>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Description Card -->
+    <div class="mt-6 rounded-2xl md:rounded-3xl border border-slate-200 bg-white p-5 md:p-8 shadow-sm">
+        <h2 class="text-lg md:text-xl font-bold text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-file-lines text-slate-400 text-sm"></i>
+            Product Description
+        </h2>
+        <p class="mt-4 text-sm md:text-base leading-relaxed text-slate-600 whitespace-pre-line">
+            {{ product().description }}
+        </p>
+    </div>
+
+    <!-- Form/Admin Actions -->
+    <div class="mt-6 flex flex-col sm:flex-row gap-3">
+        <button class="w-full sm:w-auto inline-flex justify-center items-center rounded-xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2">
+            <i class="fa-solid fa-pen mr-2 text-xs"></i>
+            Edit Product
+        </button>
+        <button class="w-full sm:w-auto inline-flex justify-center items-center rounded-xl border border-rose-200 bg-rose-50 px-6 py-3 text-sm font-semibold text-rose-700 transition hover:bg-rose-100 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2">
+            <i class="fa-solid fa-trash mr-2 text-xs"></i>
+            Delete Product
+        </button>
+    </div>
+
+</div>

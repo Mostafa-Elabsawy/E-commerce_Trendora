@@ -15,11 +15,11 @@ export class RegisterComponent {
     nonNullable: true,
     validators: [Validators.required, Validators.minLength(3)],
   });
-  email = new FormControl('', {
+  email = new FormControl<string>('', {
     nonNullable: true,
     validators: [Validators.required, Validators.email],
   });
-  password = new FormControl('', {
+  password = new FormControl<string>('', {
     nonNullable: true,
     validators: [Validators.required, Validators.minLength(3)],
   });

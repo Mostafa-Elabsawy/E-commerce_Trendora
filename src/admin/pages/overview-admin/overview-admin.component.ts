@@ -1,42 +1,93 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { KpiComponent } from '../../components/kpi/kpi.component';
 import { ChartsComponent } from '../../components/charts/charts.component';
 import { RecentOrdersComponent } from '../../components/recent-orders/recent-orders.component';
+import { OverviewService } from '../../../core/services/Admin/overview.service';
+import {
+  DashboardKPIs,
+  DashboardRecentOrders,
+  DashboardTopProducts,
+  OrderStatus,
+} from '../../../core/models/Admin/overview.interface';
+import { LowStockProductsComponent } from '../../components/low-stock-products/low-stock-products.component';
 
 @Component({
   selector: 'app-overview-admin',
-  imports: [KpiComponent, ChartsComponent,RecentOrdersComponent],
+  imports: [KpiComponent, ChartsComponent, RecentOrdersComponent,LowStockProductsComponent],
   templateUrl: './overview-admin.component.html',
   styleUrl: './overview-admin.component.css',
 })
 export class OverviewAdminComponent {
-  kpis = signal([
+  dashboardService = inject(OverviewService);
+
+  totalNumers = signal<DashboardKPIs>({
+    totalProducts: 0,
+    totalOrders: 0,
+    totalCustomers: 0,
+    totalRevenue: 0,
+  });
+  topProducts = signal<DashboardTopProducts[]>([]);
+  recentOrders = signal<DashboardRecentOrders[]>([]);
+  kpis = computed(() => [
     {
       icon: 'fa-users',
       label: 'Total Users',
-      value: '12,450',
-      route: 'users'
+      value: this.totalNumers().totalCustomers.toString(),
+      route: 'users',
     },
     {
       icon: 'fa-box',
       label: 'Total Orders',
-      value: '3,840',
-      route: 'orders'
+      value: this.totalNumers().totalOrders.toString(),
+      route: 'orders',
     },
     {
       icon: 'fa-bag-shopping',
       label: 'Total Products',
-      value: '1,245',
-      route: 'products'
+      value: this.totalNumers().totalProducts.toString(),
+      route: 'products',
     },
     {
       icon: 'fa-dollar-sign',
       label: 'Total Revenue',
-      value: '$142,380',
-      route: 'revenue'
-    }
+      value: this.totalNumers().totalRevenue.toString(),
+      route: 'revenue',
+    },
   ]);
-  handleCardRouting(route: string) {
-    
+
+  loadDashboardKPIS() {
+    this.dashboardService.getDashboardKPIs().subscribe({
+      next: (res: DashboardKPIs) => {
+        console.log('Dashboard data retrived succesfullt', res);
+        this.totalNumers.set(res);
+      },
+      error: (err) => {
+        console.error('Failed to load dashboard:', err);
+      },
+    });
   }
+  loadDashboardRecentOrders() {
+    this.dashboardService.getDashboardRecentOrders().subscribe({
+      next: (res: DashboardRecentOrders[]) => {
+        console.log('Dashboard data retrived succesfullt', res);
+        this.recentOrders.set(res);
+      },
+      error: (err) => {
+        console.error('Failed to load dashboard:', err);
+      },
+    });
+  }
+  loadDashboardTopProducts() {
+    this.dashboardService.getDashboardTopProducts().subscribe({
+      next: (res: DashboardTopProducts[]) => {
+        console.log('Dashboard data retrived succesfullt', res);
+        this.topProducts.set(res);
+      },
+      error: (err) => {
+        console.error('Failed to load dashboard:', err);
+      },
+    });
+  }
+
+  handleCardRouting(route: string) {}
 }

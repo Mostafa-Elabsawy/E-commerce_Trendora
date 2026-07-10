@@ -20,7 +20,9 @@
           "skipTests": true
         },
         "@schematics/angular:interface": {
-          "type": "interface"        }
+          "type": "interface"
+        }
+
       },
       "root": "",
       "sourceRoot": "src",
@@ -47,8 +49,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "2MB",
+                  "maximumError": "4MB"
                 },
                 {
                   "type": "anyComponentStyle",

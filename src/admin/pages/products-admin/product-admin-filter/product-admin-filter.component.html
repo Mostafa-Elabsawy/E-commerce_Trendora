@@ -1,0 +1,77 @@
+<!-- Filters -->
+<section class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+    <form class="grid gap-4 md:grid-cols-4" [formGroup]="filterForm">
+        <!-- Search -->
+        <div class="md:col-span-2">
+            <label class="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+                Search
+            </label>
+            <input type="text" [formControl]="filterForm.controls.search" placeholder="Search products..." class="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-sm outline-none transition focus:border-indigo-500 focus:bg-white" />
+
+        </div>
+
+        <!-- Category -->
+        <div>
+
+            <label class="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+                Category
+            </label>
+
+            <select [formControl]="filterForm.controls.category" class="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-sm outline-none transition focus:border-indigo-500 focus:bg-white">
+
+                <option value="">
+                    All Categories
+                </option>
+
+                @for (category of categories; track category) {
+                <option [value]="category">
+                    {{ category }}
+                </option>
+                }
+
+            </select>
+
+        </div>
+
+        <!-- Sort -->
+        <div>
+
+            <label class="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+                Sort By
+            </label>
+
+            <div class="flex gap-2">
+
+                <select [formControl]="filterForm.controls.sortBy" class="flex-1 rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-sm outline-none transition focus:border-indigo-500 focus:bg-white">
+
+                    <option value="name-asc">
+                        Name A-Z
+                    </option>
+
+                    <option value="name-desc">
+                        Name Z-A
+                    </option>
+
+                    <option value="price-asc">
+                        Price Low → High
+                    </option>
+
+                    <option value="price-desc">
+                        Price High → Low
+                    </option>
+
+                </select>
+
+                <button type="button" (click)="clearFilters()" class="rounded-lg border border-slate-200 bg-slate-100 px-3 transition hover:bg-slate-200">
+
+                    <i class="fa-solid fa-rotate-left"></i>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</section>

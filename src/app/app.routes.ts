@@ -9,15 +9,21 @@ import { HomeComponent } from '../features/home/home.component';
 import { CartComponent } from '../features/cart/cart.component';
 import { AdminMainComponent } from '../admin/layout/admin-main/admin-main.component';
 import { OverviewAdminComponent } from '../admin/pages/overview-admin/overview-admin.component';
-import { CustomersAdminComponent } from '../admin/pages/customers-admin/customers-admin.component';
+import { AllProductsAdminComponent } from '../admin/pages/products-admin/products/products-admin.component';
+import { ProductsAdminLayoutComponent } from '../admin/pages/products-admin/main/products-admin-layout.component';
+import { CustomersAdminComponent } from '../admin/pages/customers-admin/main/customers-admin.component';
 import { OrdersAdminComponent } from '../admin/pages/orders-admin/orders-admin.component';
-import { ProductsAdminComponent } from '../admin/pages/products-admin/products-admin.component';
 import { CheckoutComponent } from '../features/checkout/checkout.component';
 import { ProsuctDetailsComponent } from '../features/prosuct-details/prosuct-details.component';
+import { CustomerProfileComponent } from '../admin/pages/customers-admin/customer-profile/customer-profile.component';
+import { CustomersListComponent } from '../admin/pages/customers-admin/customers-list/customers-list.component';
+import { ViewProductComponent } from '../admin/components/view-product/view-product.component';
+import { EditProductComponent } from '../admin/components/edit-product/edit-product.component';
 import { ProfileComponent } from '../features/profile/profile.component';
+
+
 export const routes: Routes = [
- 
-  {
+   {
     path: '',
     component: MainComponent,
     children: [
@@ -41,9 +47,27 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
       { path: 'overview', component: OverviewAdminComponent },
-      { path: 'products', component: ProductsAdminComponent },
-      { path: 'customers', component: CustomersAdminComponent },
-      { path: 'orders', component:OrdersAdminComponent },
+      {
+        path: 'products',
+        component: ProductsAdminLayoutComponent,
+        children: [
+          { path: '', component: AllProductsAdminComponent },
+          {
+            path: 'view/:id',
+            component: ViewProductComponent,
+          },
+          {
+            path: 'edit/:id',
+            component: EditProductComponent,
+          },
+        ],
+      },
+      {
+        path: 'customers', component: CustomersAdminComponent, children: [
+          { path: '', component: CustomersListComponent },
+          { path: ':id', component: CustomerProfileComponent },
+      ] },
+      { path: 'orders', component: OrdersAdminComponent },
     ],
-  }
+  },
 ];
