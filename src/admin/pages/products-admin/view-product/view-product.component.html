@@ -1,11 +1,30 @@
 @if (product(); as product) {
 <div class="min-h-screen">
 
-    <!-- Back Button -->
-    <button (click)="goBack()" class="cursor-pointer inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100">
-        <i class="fa-solid fa-arrow-left"></i>
-        Back to Products
-    </button>
+    <div class="flex justify-between items-center">
+            <button (click)="goBack()" class="cursor-pointer inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100">
+                <i class="fa-solid fa-arrow-left"></i>
+                Back to Products
+            </button>
+        <!-- Back Button -->
+        <div class="mt-6 flex flex-col items-stretch sm:flex-row justify-end gap-3">
+
+            <button (click)="editProduct()" class="cursor-pointer inline-flex gap-2 items-center px-4 py-2.5 justify-center rounded-lg bg-black text-sm font-medium text-white transition hover:bg-black/80">
+                <i class="fa-solid fa-pen-to-square text-xs"></i>
+                Edit
+            </button>
+            <button (click)="deleteProduct()" [disabled]="isDeleting()" class="cursor-pointer px-4 py-2.5 text-sm font-medium bg-red-500 text-white hover:bg-red-500/80 rounded-lg transition disabled:opacity-60 disabled:cursor-not-allowed">
+                @if (isDeleting()) {
+                <i class="fa-solid fa-circle-notch fa-spin text-xs"></i>
+                Deleting...
+                } @else {
+                <i class="fa-solid fa-trash text-xs"></i>
+                Delete
+                }
+            </button>
+
+        </div>
+    </div>
 
     <!-- Main Card -->
     <div class="rounded-2xl md:rounded-3xl border border-slate-200 bg-white shadow-sm overflow-hidden">
@@ -32,7 +51,8 @@
                         <div class="space-y-1">
                             <h1 class="text-base sm:text-lg  md:text-xl lg:text-2xl font-extrabold tracking-tight text-slate-900">
                                 {{ product.name }}
-                            </h1><p class="text-xs md:text-sm font-medium text-slate-400">
+                            </h1>
+                            <p class="text-xs md:text-sm font-medium text-slate-400">
                                 Product ID: <span class=" font-mono">#{{ product.id }}</span>
                             </p>
 
@@ -99,16 +119,7 @@
     </div>
 
     <!-- Form/Admin Actions -->
-    <div class="mt-6 flex flex-col sm:flex-row gap-3">
-        <button (click)="editProduct()" class="cursor-pointer inline-flex gap-2 items-center px-4 py-2 justify-center rounded-lg bg-black text-sm font-medium text-white transition hover:bg-black/80">
-            <i class="fa-solid fa-pen-to-square text-xs"></i>
-            Edit
-        </button>
-        <button (click)="deleteProduct()" class="cursor-pointer px-4 py-2 text-sm font-medium bg-red-500 text-white hover:bg-red-500/80 rounded-lg transition">
-            <i class="fa-solid fa-trash text-xs"></i>
-            Delete
-        </button>
-    </div>
+
 
 </div>
 } @else if (loading()) {

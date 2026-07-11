@@ -1,0 +1,146 @@
+<section class="w-full flex flex-col gap-3">
+
+  <header class="flex max-sm:flex-col max-sm:items-stretch sm:justify-between items-center gap-4 border border-gray-200 px-4 py-6 rounded-2xl bg-white shadow-sm">
+
+    <div>
+      <h1 class="text-2xl font-bold text-slate-900">
+        Orders
+      </h1>
+
+      <p class="mt-1 text-sm text-slate-500">
+        Manage orders and track their fulfillment status.
+      </p>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <label for="statusFilter" class="text-xs font-semibold uppercase tracking-wide text-slate-500">
+        Status
+      </label>
+
+      <select id="statusFilter" (change)="onStatusFilterChange($event)"
+        class="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none transition focus:border-indigo-500 focus:bg-white">
+
+        <option value="">All Statuses</option>
+        @for (status of statusOptions; track status) {
+        <option [value]="status" [selected]="selectedStatus() === status">{{ status }}</option>
+        }
+
+      </select>
+
+      @if (selectedStatus()) {
+      <button (click)="selectedStatus.set('')"
+        class="rounded-lg p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+      }
+    </div>
+
+  </header>
+
+  <!-- Table -->
+  <section class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+
+    <div class="overflow-x-auto">
+
+      <table class="w-full">
+
+        <thead class="border-b border-slate-200 bg-slate-50">
+
+          <tr class="text-left text-xs uppercase tracking-wide text-slate-500">
+            <th class="px-6 py-4">Order ID</th>
+            <th class="px-6 py-4">Buyer Email</th>
+            <th class="px-6 py-4">Date</th>
+            <th class="px-6 py-4">Delivery Method</th>
+            <th class="px-6 py-4">Status</th>
+            <th class="px-6 py-4 text-right">Total</th>
+            <th class="px-6 py-4 text-right">Actions</th>
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          @if (loading()) {
+          <tr>
+            <td colspan="7" class="px-6 py-12 text-center text-sm text-slate-400">
+              <i class="fa-solid fa-circle-notch fa-spin mr-2"></i>
+              Loading orders...
+            </td>
+          </tr>
+          } @else {
+          @for (order of filteredOrders(); track order.id) {
+          <tr class="border-b border-slate-100 transition hover:bg-slate-50">
+            <td class="px-6 py-4 font-mono font-semibold text-indigo-600 text-sm">
+              #{{ order.id }}
+            </td>
+
+            <td class="px-6 py-4 text-sm text-slate-700 font-medium">
+              {{ order.buyerEmail }}
+            </td>
+
+            <td class="px-6 py-4 text-sm text-slate-600">
+              <div class="font-medium">{{ order.orderDate | date:'MMM d, y' }}</div>
+              <div class="text-xs text-slate-400">{{ order.orderDate | date:'h:mm a' }}</div>
+            </td>
+
+            <td class="px-6 py-4 text-sm text-slate-600">
+              {{ order.deliveryMethod }}
+            </td>
+
+            <td class="px-6 py-4">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border"
+                [class.bg-yellow-50]="order.status === 'Pending'"
+                [class.text-yellow-700]="order.status === 'Pending'"
+                [class.border-yellow-200]="order.status === 'Pending'"
+                [class.bg-blue-50]="order.status === 'PaymentReceived'"
+                [class.text-blue-700]="order.status === 'PaymentReceived'"
+                [class.border-blue-200]="order.status === 'PaymentReceived'"
+                [class.bg-red-50]="order.status === 'PaymentFailed'"
+                [class.text-red-700]="order.status === 'PaymentFailed'"
+                [class.border-red-200]="order.status === 'PaymentFailed'"
+                [class.bg-indigo-50]="order.status === 'Confirmed'"
+                [class.text-indigo-700]="order.status === 'Confirmed'"
+                [class.border-indigo-200]="order.status === 'Confirmed'"
+                [class.bg-cyan-50]="order.status === 'Shipped'"
+                [class.text-cyan-700]="order.status === 'Shipped'"
+                [class.border-cyan-200]="order.status === 'Shipped'"
+                [class.bg-emerald-50]="order.status === 'Delivered'"
+                [class.text-emerald-700]="order.status === 'Delivered'"
+                [class.border-emerald-200]="order.status === 'Delivered'"
+                [class.bg-gray-100]="order.status === 'Cancelled'"
+                [class.text-gray-700]="order.status === 'Cancelled'"
+                [class.border-gray-300]="order.status === 'Cancelled'">
+                {{ order.status }}
+              </span>
+            </td>
+
+            <td class="px-6 py-4 text-right font-bold text-slate-900">
+              ${{ order.total.toFixed(2) }}
+            </td>
+
+            <td class="px-6 py-4 text-right">
+              <button [routerLink]="'/admin/orders/' + order.id"
+                class="rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 hover:text-black">
+                <i class="fa-solid fa-circle-info text-xl cursor-pointer"></i>
+              </button>
+            </td>
+
+          </tr>
+          } @empty {
+          <tr>
+            <td colspan="7" class="px-6 py-12 text-center text-sm text-slate-400">
+              No orders found.
+            </td>
+          </tr>
+          }
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </section>
+
+</section>

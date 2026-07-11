@@ -10,6 +10,7 @@ import {
   OrderStatus,
 } from '../../../core/models/Admin/overview.interface';
 import { TopProductsComponent } from './top-products/top-products.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-overview-admin',
@@ -19,6 +20,7 @@ import { TopProductsComponent } from './top-products/top-products.component';
 })
 export class OverviewAdminComponent {
   dashboardService = inject(OverviewService);
+  toastr = inject(ToastrService);
 
   totalNumers = signal<DashboardKPIs>({
     totalProducts: 0,
@@ -58,34 +60,34 @@ export class OverviewAdminComponent {
   loadDashboardKPIS() {
     this.dashboardService.getDashboardKPIs().subscribe({
       next: (res: DashboardKPIs) => {
-        console.log('Dashboard data retrived succesfullt', res);
         this.totalNumers.set(res);
       },
       error: (err) => {
         console.error('Failed to load dashboard:', err);
+        this.toastr.error('Failed to load dashboard KPIs');
       },
     });
   }
   loadDashboardRecentOrders() {
     this.dashboardService.getDashboardRecentOrders().subscribe({
       next: (res: DashboardRecentOrders[]) => {
-        console.log('Dashboard data retrived succesfullt', res);
         this.recentOrders.set(res);
       },
 
       error: (err) => {
         console.error('Failed to load dashboard:', err);
+        this.toastr.error('Failed to load recent orders');
       },
     });
   }
   loadDashboardTopProducts() {
     this.dashboardService.getDashboardTopProducts().subscribe({
       next: (res: DashboardTopProducts[]) => {
-        console.log('Dashboard data retrived succesfullt', res);
         this.topProducts.set(res);
       },
       error: (err) => {
         console.error('Failed to load dashboard:', err);
+        this.toastr.error('Failed to load top products');
       },
     });
   }
