@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { debounceTime } from 'rxjs';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { ToastrService } from 'ngx-toastr';
+import { environment } from '../../../environments/environment.prod';
 
 @Component({
   selector: 'app-log-in',
@@ -11,7 +13,11 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './log-in.component.css',
 })
 export class LogInComponent {
-  constructor(private _authS: AuthService) { }
+  constructor(
+    private _authS: AuthService,
+    private router: Router,
+    private toastr: ToastrService
+  ) { }
 
   email = new FormControl('', {
     nonNullable: true,
@@ -25,6 +31,8 @@ export class LogInComponent {
     email: this.email,
     password: this.password,
   });
+
+
   onSubmit() {
     if (this.loginForm.valid) {
       let data = this.loginForm.getRawValue();
@@ -36,12 +44,20 @@ export class LogInComponent {
     this._authS.login(data).subscribe({
       next: (res: any) => {
         console.log('Login successful:', res);
+        this.toastr.success('Logged in successfully!');
+        this.router.navigate(['/']);
       },
       error: (err) => {
         console.error('Failed to login:', err);
       },
     });
   }
+
+  private getApiUrl(path: string): string {
+    const baseUrl = environment.apiURL.replace(/\/?$/, '/');
+    return `${baseUrl}${path.replace(/^\/+/, '')}`;
+  }
+
   ngAfterViewInit() {
     this.loginForm.valueChanges.subscribe(() => {
       console.log(this.loginForm.value);

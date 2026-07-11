@@ -28,18 +28,6 @@ export class ProsuctDetailsComponent {
       switchMap((id) => this._productService.grtProductById(id))
     );
   }
-  // addToCart(product: IProduct) {
-  //   this.cartItems.push({
-  //     id: product.id,
-  //     productName: product.name,
-  //     pictureUrl: product.pictureUrl,
-  //     quantity: 1,
-  //     price: product.price,
-  //   });
-
-  //   const cart: any = {
-  //     items: this.cartItems,
-  //   };
 
   addToCart(product: IProduct) {
     const newItem: ICartItem = {
@@ -49,8 +37,7 @@ export class ProsuctDetailsComponent {
       quantity: 1,
       price: product.price,
     };
-    
-    // Use the central service method that manages the state correctly
+
     this.cartService.addItemToCart(newItem);
   }
 }

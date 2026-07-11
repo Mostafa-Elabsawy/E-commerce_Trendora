@@ -11,6 +11,7 @@ export interface ProductQueryParams {
   subCategoryId?: number;
   pageSize?: number;
   pageIndex?: number;
+  search?: string;
 }
 
 @Injectable({
@@ -40,18 +41,21 @@ export class ProductService {
         params = params.set('pageSize', queryParams.pageSize.toString());
       }
       if (queryParams.pageIndex) {
-        params = params.set('pageIndex', queryParams.pageIndex.toString());
+        params = params.set('pageNumber', queryParams.pageIndex.toString());
+      }
+      if (queryParams.search) {
+        params = params.set('search', queryParams.search);
       }
     }
 
     return this.http.get<any>(this.url, { params }).pipe(
       map((res) => {
-        const data = res.Data ?? res.data ?? [];
+        const data =  res.data ;
         return {
           pageIndex: res.pageIndex ?? 1,
           pageSize: res.pageSize ?? 10,
           count: res.count ?? 0,
-          data: res.data,
+          data: data,
         } as IProductPaginationResponse;
       })
     );

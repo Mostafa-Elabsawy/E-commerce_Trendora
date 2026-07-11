@@ -4,6 +4,7 @@ import { environment } from '../../environments/environment.prod';
 import { ICart, ICartItem } from '../models/cart.interface';
 import { tap } from 'rxjs';
 import { signal } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +13,7 @@ export class CartService {
 
   private url = environment.apiURL + 'Baskets';
   cart = signal<ICart | null>(null);
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private toastr: ToastrService) {
     this.initCart();
   }
 
@@ -75,7 +76,10 @@ export class CartService {
     }
 
     this.setCart(currentCart).subscribe({
-      next: () => console.log('Cart updated successfully!'),
+      next: () => {
+
+        this.toastr.success('Item added to cart!');
+      },
       error: (err) => console.error('Failed to update cart:', err)
     });
   }
@@ -87,7 +91,10 @@ export class CartService {
     currentCart.items = currentCart.items.filter(i => i.id !== itemId);
 
     this.setCart(currentCart).subscribe({
-      next: () => console.log('Item removed '),
+      next: () => {
+
+        this.toastr.info('Item removed from cart');
+      },
       error: (err) => console.error('Failed to remove item:', err)
     });
   }
@@ -106,10 +113,17 @@ export class CartService {
       }
 
       this.setCart(currentCart).subscribe({
-        next: () => console.log('Quantity updated successfully'),
+        next: () => {
+          console.log('Quantity updated successfully');
+          this.toastr.success('Quantity updated!');
+        },
         error: (err) => console.error('Failed to update quantity:', err)
       });
     }
+  }
+  clearCart() {
+    localStorage.removeItem('cart_id');
+    this.cart.set(null);
   }
 
 }
