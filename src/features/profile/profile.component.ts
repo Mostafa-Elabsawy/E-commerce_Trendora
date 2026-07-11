@@ -64,7 +64,10 @@ export class ProfileComponent implements OnInit {
       }
     },
     updateAddress: (address: IAddress) => of<IAddress>(address),
-    logout: (): void => localStorage.removeItem('user'),
+    logout: (): void => {
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('user');
+    },
   };
 
   private readonly _orderS = {
@@ -90,10 +93,10 @@ export class ProfileComponent implements OnInit {
   constructor(private _router: Router, private _http: HttpClient) {}
   ngOnInit(): void {
     this.initializeFromStoredUser();
-    if (!this._authS.isUserLoggedin()) {
-      this._router.navigate(['/login']);
-      return;
-    }
+    // if (!this._authS.isUserLoggedin()) {
+    //   this._router.navigate(['/login']);
+    //   return;
+    // }
     this.loadUserProfile();
     this.loadUserAddress();
     this.loadUserOrders();
@@ -120,7 +123,7 @@ export class ProfileComponent implements OnInit {
     if (!token) {
       return;
     }
-    this._http.get<any>(`${environment.apiURL}Authentication/profile`, {
+    this._http.get<any>(this.getApiUrl('Authentication/profile'), {
       headers: { Authorization: `Bearer ${token}` },
     }).subscribe({
       next: (res) => {
@@ -151,7 +154,7 @@ export class ProfileComponent implements OnInit {
     if (!token) {
       return;
     }
-    this._http.get<IAddress>(`${environment.apiURL}Authentication/address`, {
+    this._http.get<IAddress>(this.getApiUrl('Authentication/address'), {
       headers: { Authorization: `Bearer ${token}` },
     }).subscribe({
       next: (res) => {
@@ -189,6 +192,11 @@ export class ProfileComponent implements OnInit {
       }
     });
   }
+  private getApiUrl(path: string): string {
+    const baseUrl = environment.apiURL.replace(/\/?$/, '/');
+    return `${baseUrl}${path.replace(/^\/+/, '')}`;
+  }
+
   private getInitials(name: string): string {
     if (!name) return 'U';
     const parts = name.trim().split(/\s+/);
