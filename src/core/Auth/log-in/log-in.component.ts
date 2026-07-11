@@ -4,6 +4,7 @@ import { debounceTime } from 'rxjs';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { environment } from '../../../environments/environment.prod';
 
 @Component({
   selector: 'app-log-in',
@@ -31,7 +32,6 @@ export class LogInComponent {
     password: this.password,
   });
 
-  constructor(private _router: Router, private _http: HttpClient) {}
 
   onSubmit() {
     if (this.loginForm.valid) {
