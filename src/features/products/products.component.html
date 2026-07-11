@@ -3,6 +3,21 @@
   <div class="max-w-7xl mx-auto">
     <div class="flex flex-wrap items-center gap-3">
 
+ 
+      <div class="flex-1 min-w-[240px]">
+        <div class="relative">
+          <input
+            type="text"
+            placeholder="Search products..."
+            [(ngModel)]="searchQuery"
+            (ngModelChange)="onSearchChange()"
+            class="w-full border border-gray-300 rounded-lg pl-10 pr-4 py-2.5 text-sm bg-white outline-none focus:border-black transition"
+          />
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+            <i class="fas fa-search"></i>
+          </div>
+        </div>
+      </div>
 
       <div class="flex-1 min-w-[160px]">
         <select
@@ -17,7 +32,6 @@
         </select>
       </div>
 
-
       <div class="flex-1 min-w-[160px]">
         <select
           class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm bg-white outline-none focus:border-black transition"
@@ -31,7 +45,6 @@
         </select>
       </div>
 
-   
       <div class="flex-1 min-w-[160px]">
         <select
           class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm bg-white outline-none focus:border-black transition"
@@ -45,11 +58,11 @@
         </select>
       </div>
 
-
       <div class="flex-1 min-w-[160px]">
         <select
           class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm bg-white outline-none focus:border-black transition"
           [(ngModel)]="selectedPriceRange"
+          (ngModelChange)="onFilterChange()"
         >
           <option value="">All Prices</option>
           <option value="under-250">Under $250</option>
@@ -59,7 +72,6 @@
           <option value="over-5000">Over $5000</option>
         </select>
       </div>
-
 
       <div class="flex-1 min-w-[160px]">
         <select
@@ -73,10 +85,9 @@
         </select>
       </div>
 
-
       <button
         (click)="clearFilters()"
-        class="px-4 py-2.5 text-sm font-medium text-white bg-black rounded-lg hover:bg-gray-800 transition"
+        class="px-4 py-2.5 text-sm font-medium text-white bg-black rounded-lg hover:bg-gray-800 transition cursor-pointer"
       >
         Clear
       </button>
@@ -87,7 +98,6 @@
     </p>
   </div>
 </div>
-
 
 <div class="max-w-7xl mx-auto px-4">
   <div class="flex items-center justify-between mb-6">
@@ -101,4 +111,35 @@
       <p class="text-center text-gray-500 col-span-full py-10">There are no products to display.</p>
     }
   </div>
+  @if (totalPages() > 1) {
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mt-12 pb-12 border-t pt-6">
+      <p class="text-sm text-gray-500">
+        Showing <span class="font-medium text-gray-700">{{ (pageIndex - 1) * pageSize + 1 }}</span>
+        – <span class="font-medium text-gray-700">{{ Math.min(pageIndex * pageSize, totalCount()) }}</span>
+        of <span class="font-medium text-gray-700">{{ totalCount() }}</span> products
+      </p>
+      
+      <div class="flex items-center gap-1">
+        <button type="button" (click)="goToPage(pageIndex - 1)" [disabled]="pageIndex === 1"
+            class="rounded-lg px-3 py-2 text-sm text-slate-500 transition hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        
+        @for (page of totalPagesArray(); track page) {
+          <button type="button" (click)="goToPage(page)"
+              class="min-w-[36px] cursor-pointer rounded-lg px-3 py-2 text-sm font-medium transition"
+              [class.bg-black]="page === pageIndex"
+              [class.text-white]="page === pageIndex"
+              [class.hover:bg-slate-100]="page !== pageIndex"
+              [class.text-slate-600]="page !== pageIndex">
+              {{ page }}
+          </button>
+        }
+        <button type="button" (click)="goToPage(pageIndex + 1)" [disabled]="pageIndex >= totalPages()"
+            class="rounded-lg px-3 py-2 text-sm text-slate-500 transition hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer">
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+  }
 </div>

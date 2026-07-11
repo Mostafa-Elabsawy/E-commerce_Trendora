@@ -3,6 +3,8 @@ import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angula
 import { debounceTime } from 'rxjs';
 import { RouterLink } from "@angular/router";
 import { AuthService } from '../../services/auth.service';
+import { ToastrService } from 'ngx-toastr';
+
 @Component({
   selector: 'app-register',
   imports: [ReactiveFormsModule, RouterLink],
@@ -10,7 +12,10 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './register.component.css',
 })
 export class RegisterComponent {
-  constructor(private authS: AuthService) { }
+  constructor(
+    private authS: AuthService,
+    private toastr: ToastrService
+  ) { }
   name = new FormControl('', {
     nonNullable: true,
     validators: [Validators.required, Validators.minLength(3)],
@@ -42,7 +47,7 @@ export class RegisterComponent {
     this.authS.register(payload).subscribe({
       next: (res) => {
         console.log(res);
-
+        this.toastr.success('Registration successful! Please login.');
       }, error: (err) => {
         console.error('Registration failed:', err.error);
         if (err.error && err.error.errors) {

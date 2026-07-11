@@ -4,6 +4,10 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { CheckoutService } from '../../core/services/checkout.service';
 import { DeliveryMethodIdService } from '../../core/services/delivery-method-id.service';
 import { IDeliveryMethod } from '../../core/models/deliveryTime.interface';
+import { PaymentService } from '../../core/services/payment.service';
+import { Router } from '@angular/router';
+import { CartService } from '../../core/services/cart.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-checkout',
@@ -12,7 +16,14 @@ import { IDeliveryMethod } from '../../core/models/deliveryTime.interface';
   styleUrl: './checkout.component.css',
 })
 export class CheckoutComponent implements OnInit {
-  constructor(private checkoutService: CheckoutService, private del: DeliveryMethodIdService) { }
+  constructor(
+    private checkoutService: CheckoutService,
+    private del: DeliveryMethodIdService,
+    private paymentService: PaymentService,
+    private cartService: CartService,
+    private toastr: ToastrService,
+    private router: Router
+  ) { }
   deliveryMethodIdService: IDeliveryMethod[] = []
 
   firstName = new FormControl('', {
@@ -51,8 +62,6 @@ export class CheckoutComponent implements OnInit {
   ngOnInit(): void {
     this.del.getDeliveryMethods().subscribe({
       next: (res) => {
-        console.log(res);
-        
         this.deliveryMethodIdService = res;
       },
       error: (err) => {
@@ -62,27 +71,44 @@ export class CheckoutComponent implements OnInit {
   }
 
   placeOrder() {
+    if (this.checkoutForm.invalid) {
+      this.checkoutForm.markAllAsTouched();
+      return;
+    }
+
     let data = this.checkoutForm.getRawValue();
-    let payload = {
-      deliveryMethodId: 1,
-      firstName: data.firstName,
-      lastName: data.lastName,
-      street: data.street,
-      city: data.city,
-      country: data.country,
-      deliveryTime: data.deliveryTime,
-    };
+    let deliveryMethodId = Number(data.deliveryTime);
 
-    this.checkoutService.checkOut(payload).subscribe({
+    this.paymentService.createPaymentIntent(deliveryMethodId).subscribe({
       next: (res) => {
-        console.log("order placed successfully",res);
+        console.log("payment intent created successfully", res);
 
+        let orderPayload = {
+          deliveryMethodId: deliveryMethodId,
+          shipToAddress: {
+            firstName: data.firstName,
+            lastName: data.lastName,
+            street: data.street,
+            city: data.city,
+            country: data.country
+          }
+        };
+
+        this.checkoutService.checkOut(orderPayload).subscribe({
+          next: (res) => {
+            this.toastr.success('Order placed successfully!');
+            this.cartService.clearCart();
+            this.router.navigate(['/home']);
+          },
+          error: (err) => {
+            console.error("checkout error", err);
+          }
+        });
       },
       error: (err) => {
-        console.log(err);
+        console.error("payment intent error", err);
       }
     });
-
   }
 
 }
