@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, of } from 'rxjs';
 import { IProduct } from '../../core/models/product.interface';
 import { HttpClient } from '@angular/common/http';
@@ -71,7 +71,15 @@ export class ProfileComponent implements OnInit {
   };
 
   private readonly _orderS = {
-    getOrders: () => of<IOrder[]>([]),
+    getOrders: () => {
+      try {
+        const savedOrders = localStorage.getItem('userOrders');
+        const parsedOrders = savedOrders ? JSON.parse(savedOrders) : [];
+        return of<Array<IOrder>>(Array.isArray(parsedOrders) ? parsedOrders : []);
+      } catch {
+        return of<IOrder[]>([]);
+      }
+    },
   };
 
   private readonly _wishlistS = {
