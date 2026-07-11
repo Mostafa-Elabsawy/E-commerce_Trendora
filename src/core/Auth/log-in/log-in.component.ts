@@ -4,6 +4,7 @@ import { debounceTime } from 'rxjs';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { environment } from '../../../environments/environment.prod';
 
 @Component({
   selector: 'app-log-in',
@@ -30,6 +31,8 @@ export class LogInComponent {
     email: this.email,
     password: this.password,
   });
+
+
   onSubmit() {
     if (this.loginForm.valid) {
       let data = this.loginForm.getRawValue();
@@ -49,6 +52,12 @@ export class LogInComponent {
       },
     });
   }
+
+  private getApiUrl(path: string): string {
+    const baseUrl = environment.apiURL.replace(/\/?$/, '/');
+    return `${baseUrl}${path.replace(/^\/+/, '')}`;
+  }
+
   ngAfterViewInit() {
     this.loginForm.valueChanges.subscribe(() => {
       console.log(this.loginForm.value);
