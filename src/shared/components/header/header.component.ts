@@ -23,6 +23,11 @@ export class HeaderComponent {
     return this.authService.isUserLoggedin();
   }
 
+  get userName(): string {
+    const user = this.authService.getStoredUser();
+    return user?.displayName || user?.name || user?.email || '';
+  }
+
   logout(): void {
     this.authService.logout();
   }

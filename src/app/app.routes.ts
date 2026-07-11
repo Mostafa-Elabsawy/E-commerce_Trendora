@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from '../core/guards/auth.guard';
+import { loginGuard } from '../core/guards/login.guard';
 import { AboutComponent } from '../features/about/about.component';
 import { ContactComponent } from '../features/contact/contact.component';
 import { RegisterComponent } from '../core/Auth/register/register.component';
@@ -41,7 +42,7 @@ export const routes: Routes = [
       { path: 'products', component: ProductsComponent },
       { path: 'cart', component: CartComponent },
       { path: 'checkout', component: CheckoutComponent },
-      { path: 'profile', component: ProfileComponent },
+      { path: 'profile', component: ProfileComponent, canActivate: [loginGuard] },
     ],
   },
   {
