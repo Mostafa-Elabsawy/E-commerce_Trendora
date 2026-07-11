@@ -25,4 +25,5 @@ export interface IOrder {
   items: IOrderItem[];
   subtotal: number;
   total: number;
+   summary?: string;
 }

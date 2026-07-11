@@ -1,13 +1,30 @@
-import { Component } from '@angular/core';
+import { Component, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { MegaMenuComponent } from "../mega-menu/mega-menu.component";
+import { CartService } from '../../../core/services/cart.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-header',
-  imports: [RouterLink, MegaMenuComponent],
+  imports: [RouterLink],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })
 export class HeaderComponent {
-    isMenuOpen = false;
+  isMenuOpen = false;
+
+  constructor(
+    private cartservice: CartService,
+    private authService: AuthService
+  ) { }
+
+  cartItemsCount = computed(() => this.cartservice.cart()?.items.length ?? 0);
+
+  get isLoggedIn(): boolean {
+    return this.authService.isUserLoggedin();
+  }
+
+  logout(): void {
+    this.authService.logout();
+  }
 }
+

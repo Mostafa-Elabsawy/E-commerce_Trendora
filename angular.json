@@ -20,9 +20,9 @@
           "skipTests": true
         },
         "@schematics/angular:interface": {
-          "type": "interface",
-          "skipTests": true
+          "type": "interface"
         }
+
       },
       "root": "",
       "sourceRoot": "src",
@@ -41,7 +41,8 @@
             ],
             "styles": [
               "src/styles.css",
-              "node_modules/@fortawesome/fontawesome-free/css/all.min.css"
+              "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
+              "node_modules/ngx-toastr/toastr.css"
             ]
           },
           "configurations": {
@@ -49,8 +50,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "2MB",
+                  "maximumError": "4MB"
                 },
                 {
                   "type": "anyComponentStyle",

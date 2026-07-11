@@ -1,5 +1,42 @@
-<app-hero></app-hero>
-<app-latest-collections> </app-latest-collections>
-<app-best-sellers></app-best-sellers>
-<app-our-policy></app-our-policy>
-<app-news-letter-box></app-news-letter-box>
+<div class="w-full flex flex-col gap-16 md:gap-24 pb-20 overflow-x-hidden">
+  
+ 
+  <section class="w-full px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pt-6 animate-fade-in-down">
+    <div class="bg-gradient-to-r from-gray-50 to-white rounded-2xl overflow-hidden shadow-xs border border-gray-100">
+      <app-hero></app-hero>
+    </div>
+  </section>
+
+
+  <section class="w-full px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto animate-fade-in-up delay-100">
+    <div class="flex flex-col">
+      <app-latest-collections></app-latest-collections>
+    </div>
+  </section>
+
+
+  <section class="w-full px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto animate-fade-in-up delay-200">
+    <div class="flex flex-col">
+      <app-best-sellers></app-best-sellers>
+    </div>
+  </section>
+
+  <section class="w-full bg-slate-50/50 py-16 border-y border-slate-100 animate-fade-in-up delay-300">
+    <div class="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <app-our-policy></app-our-policy>
+    </div>
+  </section>
+
+ 
+  <section class="w-full px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto animate-fade-in-up delay-400">
+    <div class="bg-white rounded-3xl shadow-sm border border-slate-100 relative overflow-hidden">
+     
+      <div class="absolute -top-24 -right-24 w-48 h-48 rounded-full bg-gray-50 blur-2xl"></div>
+      <div class="absolute -bottom-24 -left-24 w-48 h-48 rounded-full bg-gray-50 blur-2xl"></div>
+      <div class="relative z-10 px-4 sm:px-8">
+        <app-news-letter-box></app-news-letter-box>
+      </div>
+    </div>
+  </section>
+
+</div>

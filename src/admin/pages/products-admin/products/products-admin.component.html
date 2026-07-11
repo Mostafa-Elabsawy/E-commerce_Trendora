@@ -1,0 +1,213 @@
+<div class="w-full flex flex-col gap-3">
+    <!-- Header -->
+    <header class="flex max-sm:flex-col max-sm:items-stretch sm:justify-between items-center gap-4 shadow border border-gray-200 px-4 py-6 rounded-2xl">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-900">
+                Products
+            </h1>
+            <p class="mt-1 text-sm text-slate-500">
+                Manage products, inventory, and catalog information.
+            </p>
+        </div>
+        <button (click)="openCreateModal()" class="cursor-pointer inline-flex gap-2 items-center px-4 py-3 justify-center rounded-lg bg-black text-sm font-medium text-white transition hover:bg-black/80">
+            <i class="fa-solid fa-plus "></i>
+            <span>Add Product</span>
+        </button>
+    </header>
+    <app-product-admin-filter (filterChange)="onFilterChange($event)" />
+
+    <!-- Table -->
+    <section class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+
+        <div class="overflow-x-auto">
+
+            <table class="w-full">
+
+                <thead class="border-b border-slate-200 bg-slate-50">
+
+                    <tr class="text-left text-xs uppercase tracking-wide text-slate-500">
+                        <th class="px-6 py-4">Product</th>
+                        <th class="px-6 py-4">Category</th>
+                        <th class="px-6 py-4">Price</th>
+                        <th class="px-6 py-4">Stock</th>
+                        <th class="px-6 py-4 text-right">Actions</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @for (product of products(); track product.id) {
+
+                    <tr class="border-b border-slate-100 transition hover:bg-slate-50 ">
+
+                        <!-- Product -->
+                        <td class="px-2 py-1">
+
+                            <div class="flex items-center gap-4">
+
+                                <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-slate-100">
+
+                                    @if (product.pictureUrl) {
+
+                                    <img [src]="product.pictureUrl" [alt]="product.name" class="h-full w-full rounded-lg object-cover" />
+
+                                    } @else {
+                                    <i class="fa-solid fa-shirt text-slate-400"></i>
+                                    }
+
+                                </div>
+
+                                <div>
+
+                                    <p class="font-medium text-slate-900">
+                                        {{ product.name }}
+                                    </p>
+
+                                    <p class="text-sm text-slate-500">
+                                        {{ product.productBrand }}
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+                        <!-- Category -->
+                        <td class="px-6 py-4">
+
+                            <div class="space-y-1">
+
+                                <p class="font-medium text-slate-800">
+                                    {{ product.categoryName }}
+                                </p>
+
+                                <p class="text-sm text-slate-500">
+                                    {{ product.subCategory }}
+                                </p>
+
+                            </div>
+
+                        </td>
+
+                        <!-- Price -->
+                        <td class="px-6 py-4 font-semibold">
+                            ${{ product.price.toFixed(2) }}
+                        </td>
+
+                        <!-- Stock -->
+                        <td class="px-6 py-4">
+
+                            <div class="flex items-center gap-2">
+                                <span class="h-2 w-2 rounded-full" [class]="stockDotClass(product.stockQuantity)">
+                                </span>
+                                <span [class]="stockTextClass(product.stockQuantity)">
+
+                                    {{
+                                    product.stockQuantity === 0
+                                    ? 'Out of Stock'
+                                    : product.stockQuantity + ' units'
+                                    }}
+
+                                </span>
+
+                            </div>
+
+                        </td>
+
+                        <!-- Actions -->
+                        <td class="px-6 py-4">
+
+                            <div class="flex justify-end gap-2">
+
+                                <button type="button" [routerLink]="'/admin/products/edit/' + product.id" class="rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 hover:text-amber-600">
+                                    <i class = "fa-solid fa-circle-exclamation"></i>
+                                </button>
+                                <button type="button" [routerLink]="'/admin/products/edit/' + product.id" class="rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 hover:text-amber-600">
+                                    <i class = "fa fa-pen-to-square"></i>
+                                </button>
+                                <button type="button" (click)="deleteProduct(product.id)" class="rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 hover:text-amber-600">
+                                    <i class = "fa fa-trash"></i>
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    } @empty {
+
+                    <tr>
+
+                        <td colspan="5" class="px-6 py-16 text-center">
+
+                            <div class="space-y-3">
+
+                                <i class="fa-solid fa-box-open text-5xl text-slate-300">
+                                </i>
+
+                                <h3 class="text-lg font-semibold text-slate-700">
+
+                                    No products found
+
+                                </h3>
+
+                                <p class="text-sm text-slate-500">
+                                    Try adjusting your search or filters.
+                                </p>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+    <!-- Pagination -->
+    @if (totalCount() > 0) {
+    <section class="flex items-center justify-between rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
+        <p class="text-sm text-slate-500">
+            Showing <span class="font-medium text-slate-700">{{ startIndex() }}</span>
+            – <span class="font-medium text-slate-700">{{ endIndex() }}</span>
+            of <span class="font-medium text-slate-700">{{ totalCount() }}</span> products
+        </p>
+        <div class="flex items-center gap-1">
+            <button type="button" (click)="prevPage()" [disabled]="currentPage() === 1"
+                class="rounded-lg px-3 py-2 text-sm text-slate-500 transition hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            @for (page of [].constructor(totalPages()); track $index) {
+                @if ($index === 0 || $index === totalPages() - 1 || ($index >= currentPage() - 3 && $index <= currentPage() + 1)) {
+                <button type="button" (click)="goToPage($index + 1)"
+                    class="min-w-[36px] cursor-pointer rounded-lg px-3 py-2 text-sm font-medium transition"
+                    [class.bg-black]="$index + 1 === currentPage()"
+                    [class.text-white]="$index + 1 === currentPage()"
+                    [class.hover:bg-slate-100]="$index + 1 !== currentPage()"
+                    [class.text-slate-600]="$index + 1 !== currentPage()">
+                    {{ $index + 1 }}
+                </button>
+                } @else if ($index === currentPage() - 4 || $index === currentPage() + 2) {
+                <span class="px-1 text-slate-400 cursor-pointer">…</span>
+                }
+            }
+            <button type="button" (click)="nextPage()" [disabled]="currentPage() === totalPages()"
+                class="rounded-lg px-3 py-2 text-sm cursor-pointer text-slate-500 transition hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        </div>
+    </section>
+    }
+
+</div>
+<app-create-prodcut [state]="createProduct()" (stateChange)="closeCreateModal()"></app-create-prodcut>

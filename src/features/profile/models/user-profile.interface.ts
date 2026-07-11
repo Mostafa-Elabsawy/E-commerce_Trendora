@@ -1,4 +1,4 @@
-import { IAddress } from './address.interface';
+import { IAddress } from '../../../core/models/userData.interface'; 
 
 export interface IUserProfile {
   initials: string;

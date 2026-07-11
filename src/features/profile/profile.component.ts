@@ -1,14 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, of } from 'rxjs';
-import { IProduct } from '../../core/models/product.interface';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment';
-import { IAddress } from './models/address.interface';
-import { IOrder } from './models/order.interface';
-import { IUserProfile } from './models/user-profile.interface';
+import { IAddress } from '../../core/models/userData.interface';
+import { ProfileStore } from '../../core/services/profile.store';
 
 @Component({
   selector: 'app-profile',
@@ -18,226 +12,64 @@ import { IUserProfile } from './models/user-profile.interface';
   styleUrl: './profile.component.css',
 })
 export class ProfileComponent implements OnInit {
-  public activeTab = 'profile';
-  public isEditingAddress = false;
-  public isEditingPersonalInfo = false;
-  public isLoading = false;
-  public successMessage = '';
-  public errorMessage = '';
+  activeTab = 'profile';
+  isEditingAddress = false;
+  isEditingPersonalInfo = false;
+  isLoading = false;
 
-  public personalForm = new FormGroup({
+  personalForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.email]),
     phone: new FormControl('', [Validators.required]),
   });
-  
-  public user: IUserProfile = {
-    initials: '',
-    name: '',
-    email: '',
-    phone: '',
-    address: null,
-    ordersCount: 0,
-    savedCount: 0,
-    totalSpent: 0,
-  };
 
-  public menuItems = [
-    { key: 'profile', label: 'Profile Details', icon: 'fa-user' },
-    { key: 'addresses', label: 'Addresses', icon: 'fa-location-dot' },
-    { key: 'orders', label: 'Orders', icon: 'fa-box' },
-    { key: 'wishlist', label: 'Wishlist', icon: 'fa-heart' },
-  ];
-  
-  public recentOrders: IOrder[] = [];
-  public wishlistItems: IProduct[] = [];
-
-  private readonly _authS = {
-    isUserLoggedin: (): boolean => Boolean(localStorage.getItem('authToken') || localStorage.getItem('user')),
-    getCurrentUserFromServer: () => of<any>(null),
-    getAddressFromServer: () => of<IAddress | null>(null),
-    getStoredUser: (): unknown => {
-      try {
-        return JSON.parse(localStorage.getItem('user') ?? 'null');
-      } catch {
-        return null;
-      }
-    },
-    updateAddress: (address: IAddress) => of<IAddress>(address),
-    logout: (): void => {
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('user');
-    },
-  };
-
-  private readonly _orderS = {
-    getOrders: () => {
-      try {
-        const savedOrders = localStorage.getItem('userOrders');
-        const parsedOrders = savedOrders ? JSON.parse(savedOrders) : [];
-        return of<Array<IOrder>>(Array.isArray(parsedOrders) ? parsedOrders : []);
-      } catch {
-        return of<IOrder[]>([]);
-      }
-    },
-  };
-
-  private readonly _wishlistS = {
-    wishlist$: new BehaviorSubject<IProduct[]>([]),
-    removeFromWishlist: (productId: number): void => {
-      const currentItems = this._wishlistS.wishlist$.getValue().filter((item: IProduct) => item.Id !== productId);
-      this._wishlistS.wishlist$.next(currentItems);
-    },
-  };
-
-  public addressForm = new FormGroup({
+  addressForm = new FormGroup({
     firstName: new FormControl('', [Validators.required]),
     lastName: new FormControl('', [Validators.required]),
     street: new FormControl('', [Validators.required]),
     city: new FormControl('', [Validators.required]),
     country: new FormControl('', [Validators.required]),
   });
-  
-  constructor(private _router: Router, private _http: HttpClient) {}
+
+  menuItems = [
+    { key: 'profile', label: 'Profile Details', icon: 'fa-user' },
+    { key: 'addresses', label: 'Addresses', icon: 'fa-location-dot' },
+    { key: 'orders', label: 'Orders', icon: 'fa-box' },
+    { key: 'wishlist', label: 'Wishlist', icon: 'fa-heart' },
+  ];
+
+  // Proxies — your HTML keeps using {{ user.name }}, {{ recentOrders }}, etc.
+  get user() { return this.store.user; }
+  get recentOrders() { return this.store.recentOrders; }
+  get wishlistItems() { return this.store.wishlistItems; }
+  get isLoadingProfile() { return this.store.isLoadingProfile; }
+  get successMessage() { return this.store.successMessage; }
+  get errorMessage() { return this.store.errorMessage; }
+
+  constructor(private store: ProfileStore) {}
+
   ngOnInit(): void {
-    this.initializeFromStoredUser();
-    // if (!this._authS.isUserLoggedin()) {
-    //   this._router.navigate(['/login']);
-    //   return;
-    // }
-    this.loadUserProfile();
-    this.loadUserAddress();
-    this.loadUserOrders();
-    this.subscribeToWishlist();
+    this.store.init();
   }
 
-  private initializeFromStoredUser(): void {
-    const storedUser = this._authS.getStoredUser();
-    if (storedUser && typeof storedUser === 'object') {
-      const data = storedUser as { name?: string; email?: string; phone?: string; role?: string };
-      this.user.name = data.name || 'Valued Customer';
-      this.user.email = data.email || '';
-      this.user.phone = data.phone || 'Not provided';
-      this.user.initials = this.getInitials(this.user.name);
-      this.personalForm.patchValue({
-        name: this.user.name,
-        email: this.user.email,
-        phone: this.user.phone,
-      });
-    }
-  }
-  private loadUserProfile() {
-    const token = localStorage.getItem('authToken');
-    if (!token) {
-      return;
-    }
-    this._http.get<any>(this.getApiUrl('Authentication/profile'), {
-      headers: { Authorization: `Bearer ${token}` },
-    }).subscribe({
-      next: (res) => {
-        if (res) {
-          this.user.name = res.name || res.displayName || res.userName || 'Valued Customer';
-          this.user.email = res.email || res.userEmail || '';
-          this.user.phone = res.phone || res.phoneNumber || 'Not provided';
-          this.user.initials = this.getInitials(this.user.name);
-          this.personalForm.patchValue({
-            name: this.user.name,
-            email: this.user.email,
-            phone: this.user.phone,
-          });
-          if (res.address) {
-            this.user.address = res.address;
-            this.patchAddressForm(res.address);
-          }
-        }
-      },
-      error: (err) => {
-        console.error('Error fetching user profile:', err);
-        this.initializeFromStoredUser();
-      }
-    });
-  }
-  private loadUserAddress() {
-    const token = localStorage.getItem('authToken');
-    if (!token) {
-      return;
-    }
-    this._http.get<IAddress>(this.getApiUrl('Authentication/address'), {
-      headers: { Authorization: `Bearer ${token}` },
-    }).subscribe({
-      next: (res) => {
-        if (res) {
-          this.user.address = res;
-          this.patchAddressForm(res);
-        }
-      },
-      error: (err) => {
-        console.error('Error fetching address:', err);
-      }
-    });
-  }
-  private loadUserOrders() {
-    this._orderS.getOrders().subscribe({
-      next: (res) => {
-        if (res) {
-          this.recentOrders = res;
-          this.user.ordersCount = res.length;
-          
-          const total = res.reduce((acc, order) => acc + (order.total || 0), 0);
-          this.user.totalSpent = total;
-        }
-      },
-      error: (err) => {
-        console.error('Error fetching orders:', err);
-      }
-    });
-  }
-  private subscribeToWishlist() {
-    this._wishlistS.wishlist$.subscribe({
-      next: (items) => {
-        this.wishlistItems = items;
-        this.user.savedCount = items.length;
-      }
-    });
-  }
-  private getApiUrl(path: string): string {
-    const baseUrl = environment.apiURL.replace(/\/?$/, '/');
-    return `${baseUrl}${path.replace(/^\/+/, '')}`;
-  }
-
-  private getInitials(name: string): string {
-    if (!name) return 'U';
-    const parts = name.trim().split(/\s+/);
-    if (parts.length >= 2) {
-      return (parts[0][0] + parts[1][0]).toUpperCase();
-    }
-    return name.slice(0, 2).toUpperCase();
-  }
-  private patchAddressForm(address: IAddress) {
-    this.addressForm.patchValue({
-      firstName: address.firstName || '',
-      lastName: address.lastName || '',
-      street: address.street || '',
-      city: address.city || '',
-      country: address.country || '',
-    });
-  }
-  public setActiveTab(tab: string) {
+  setActiveTab(tab: string): void {
     this.activeTab = tab;
     this.isEditingAddress = false;
     this.isEditingPersonalInfo = false;
-    this.clearMessages();
+    this.store.clearMessages();
   }
-  public toggleEditAddress() {
+
+  toggleEditAddress(): void {
     this.isEditingAddress = !this.isEditingAddress;
-    this.clearMessages();
+    this.store.clearMessages();
     if (this.isEditingAddress && this.user.address) {
       this.patchAddressForm(this.user.address);
     }
   }
-  public toggleEditPersonalInfo() {
+
+  toggleEditPersonalInfo(): void {
     this.isEditingPersonalInfo = !this.isEditingPersonalInfo;
-    this.clearMessages();
+    this.store.clearMessages();
     if (this.isEditingPersonalInfo) {
       this.personalForm.patchValue({
         name: this.user.name,
@@ -246,57 +78,53 @@ export class ProfileComponent implements OnInit {
       });
     }
   }
-  public onSavePersonalInfo() {
+
+  onSavePersonalInfo(): void {
     if (this.personalForm.invalid) {
-      this.errorMessage = 'Please fill out all fields correctly.';
+      this.store.showError('Please fill out all fields correctly.');
       return;
     }
     this.isLoading = true;
-    this.clearMessages();
-    const formValue = this.personalForm.value as { name: string; email: string; phone: string };
-    this.user.name = formValue.name;
-    this.user.email = formValue.email;
-    this.user.phone = formValue.phone;
-    this.user.initials = this.getInitials(this.user.name);
-    this.isEditingPersonalInfo = false;
+    this.store.savePersonalInfo(this.personalForm.value as { name: string; email: string; phone: string });
     this.isLoading = false;
-    this.successMessage = 'Personal information updated successfully!';
-    setTimeout(() => this.clearMessages(), 3000);
+    this.isEditingPersonalInfo = false;
   }
-  public onSaveAddress() {
+
+  onSaveAddress(): void {
     if (this.addressForm.invalid) {
-      this.errorMessage = 'Please fill out all fields correctly.';
+      this.store.showError('Please fill out all fields correctly.');
       return;
     }
     this.isLoading = true;
-    this.clearMessages();
-    const addressData: IAddress = this.addressForm.value as IAddress;
-    this._authS.updateAddress(addressData).subscribe({
-      next: (res) => {
-        this.user.address = res;
+    this.store.saveAddress(this.addressForm.value as IAddress).subscribe({
+      next: () => {
         this.isEditingAddress = false;
         this.isLoading = false;
-        this.successMessage = 'Address updated successfully!';
-        setTimeout(() => this.clearMessages(), 3000);
+        this.store.successMessage = 'Address updated successfully!';
+        setTimeout(() => this.store.clearMessages(), 3000);
       },
-      error: (err) => {
-        console.error('Error saving address:', err);
-        this.errorMessage = 'Failed to update address. Please try again.';
+      error: () => {
+        this.store.showError('Failed to update address. Please try again.');
         this.isLoading = false;
-      }
+      },
     });
   }
-  public removeFromWishlist(productId: number) {
-    this._wishlistS.removeFromWishlist(productId);
-    this.successMessage = 'Item removed from wishlist.';
-    setTimeout(() => this.clearMessages(), 2000);
+
+  removeFromWishlist(productId: number): void {
+    this.store.removeFromWishlist(productId);
   }
-  public logout() {
-    this._authS.logout();
-    this._router.navigate(['/login']);
+
+  logout(): void {
+    this.store.logout();
   }
-  private clearMessages() {
-    this.successMessage = '';
-    this.errorMessage = '';
+
+  private patchAddressForm(address: IAddress): void {
+    this.addressForm.patchValue({
+      firstName: address.firstName || '',
+      lastName: address.lastName || '',
+      street: address.street || '',
+      city: address.city || '',
+      country: address.country || '',
+    });
   }
 }
