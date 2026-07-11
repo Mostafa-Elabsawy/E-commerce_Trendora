@@ -10,6 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TypesService } from '../../../../core/services/types.service';
 import { ProductsAdminService } from '../../../../core/services/Admin/products-admin.service';
 import { UpdateProduct } from '../../../../core/models/Admin/products-admin.interface';
+import { ToastrService } from 'ngx-toastr';
 @Component({
     selector: 'app-edit-product',
     standalone: true,
@@ -22,6 +23,7 @@ export class EditProductComponent implements OnInit {
     private productsAdminService = inject(ProductsAdminService);
     private router = inject(Router);
     private route = inject(ActivatedRoute);
+    private toastr = inject(ToastrService);
 
     private productId = 0;
 
@@ -112,6 +114,7 @@ export class EditProductComponent implements OnInit {
                     },
                     error: (err) => {
                         console.error('Error loading product:', err);
+                        this.toastr.error('Failed to load product details');
                         this.loading.set(false);
                     },
                 });
@@ -151,17 +154,19 @@ export class EditProductComponent implements OnInit {
 
         this.productsAdminService.updateProduct(this.productId, dto).subscribe({
             next: () => {
+                this.toastr.success('Product updated successfully');
                 this.saving.set(false);
             },
             error: (err) => {
                 console.error('Error updating product:', err);
+                this.toastr.error('Failed to update product');
                 this.saving.set(false);
             },
         });
     }
 
     cancel(): void {
-        this.router.navigate(['../'], { relativeTo: this.route });
+        this.router.navigate(['../..'], { relativeTo: this.route });
     }
 
     get finalPrice(): number {

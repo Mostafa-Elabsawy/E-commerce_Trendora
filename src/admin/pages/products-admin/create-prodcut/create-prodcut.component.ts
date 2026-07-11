@@ -9,6 +9,7 @@ import {
 import { TypesService } from '../../../../core/services/types.service';
 import { ProductsAdminService } from '../../../../core/services/Admin/products-admin.service';
 import { CreateProduct } from '../../../../core/models/Admin/products-admin.interface';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-create-prodcut',
@@ -20,6 +21,7 @@ import { CreateProduct } from '../../../../core/models/Admin/products-admin.inte
 export class CreateProdcutComponent {
   private typesService = inject(TypesService);
   private productsAdminService = inject(ProductsAdminService);
+  private toastr = inject(ToastrService);
 
   state = input<boolean>(false);
   stateChange = output<boolean>();
@@ -121,11 +123,13 @@ export class CreateProdcutComponent {
 
     this.productsAdminService.createProduct(dto).subscribe({
       next: () => {
+        this.toastr.success('Product created successfully');
         this.saving.set(false);
         this.closeModal();
       },
       error: (err) => {
         console.error('Error creating product:', err);
+        this.toastr.error('Failed to create product');
         this.saving.set(false);
       },
     });

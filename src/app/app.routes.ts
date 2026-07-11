@@ -12,7 +12,9 @@ import { OverviewAdminComponent } from '../admin/pages/overview-admin/overview-a
 import { AllProductsAdminComponent } from '../admin/pages/products-admin/products/products-admin.component';
 import { ProductsAdminLayoutComponent } from '../admin/pages/products-admin/main/products-admin-layout.component';
 import { CustomersAdminComponent } from '../admin/pages/customers-admin/main/customers-admin.component';
-import { OrdersAdminComponent } from '../admin/pages/orders-admin/orders-admin.component';
+import { ListOrdersComponent } from '../admin/pages/orders-admin/list-orders/list-orders.component';
+import { OrdersAdminLayoutComponent } from '../admin/pages/orders-admin/main/orders-admin-layout.component';
+import { OrderDetailComponent } from '../admin/pages/orders-admin/order-detail/order-detail.component';
 import { CheckoutComponent } from '../features/checkout/checkout.component';
 import { ProsuctDetailsComponent } from '../features/prosuct-details/prosuct-details.component';
 import { CustomerProfileComponent } from '../admin/pages/customers-admin/customer-profile/customer-profile.component';
@@ -23,6 +25,11 @@ import { ViewProductComponent } from '../admin/pages/products-admin/view-product
 
 
 export const routes: Routes = [
+  {
+    path:'',
+    redirectTo:'/admin/customers',
+    pathMatch:'full'
+  },
    {
     path: '',
     component: MainComponent,
@@ -67,7 +74,14 @@ export const routes: Routes = [
           { path: '', component: CustomersListComponent },
           { path: ':id', component: CustomerProfileComponent },
       ] },
-      { path: 'orders', component: OrdersAdminComponent },
+      {
+        path: 'orders',
+        component: OrdersAdminLayoutComponent,
+        children: [
+          { path: '', component: ListOrdersComponent },
+          { path: ':id', component: OrderDetailComponent },
+        ],
+      },
     ],
   },
 ];
