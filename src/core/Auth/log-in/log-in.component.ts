@@ -30,6 +30,9 @@ export class LogInComponent {
     email: this.email,
     password: this.password,
   });
+
+  constructor(private _router: Router, private _http: HttpClient) {}
+
   onSubmit() {
     if (this.loginForm.valid) {
       let data = this.loginForm.getRawValue();
@@ -49,6 +52,12 @@ export class LogInComponent {
       },
     });
   }
+
+  private getApiUrl(path: string): string {
+    const baseUrl = environment.apiURL.replace(/\/?$/, '/');
+    return `${baseUrl}${path.replace(/^\/+/, '')}`;
+  }
+
   ngAfterViewInit() {
     this.loginForm.valueChanges.subscribe(() => {
       console.log(this.loginForm.value);
