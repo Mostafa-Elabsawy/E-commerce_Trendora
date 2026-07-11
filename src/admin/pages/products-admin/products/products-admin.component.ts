@@ -16,6 +16,7 @@ import { ProductsAdminService } from '../../../../core/services/Admin/products-a
 import { TypesService } from '../../../../core/services/types.service';
 import { ProductAdminFilterComponent } from '../product-admin-filter/product-admin-filter.component';
 import { CreateProdcutComponent } from '../create-prodcut/create-prodcut.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-products-admin',
@@ -28,6 +29,7 @@ export class AllProductsAdminComponent implements OnInit {
     private productsAdminService = inject(ProductsAdminService);
     TypesService = inject(TypesService);
     router = inject(Router);
+    private toastr = inject(ToastrService);
 
     // ---------------- STATE ----------------
     products = signal<ProductAdmin[]>([]);
@@ -62,6 +64,7 @@ export class AllProductsAdminComponent implements OnInit {
             },
             error: (err) => {
                 console.error('Error loading products:', err);
+                this.toastr.error('Failed to load products');
             },
         });
     }
@@ -110,12 +113,16 @@ export class AllProductsAdminComponent implements OnInit {
     }
     deleteProduct(id:number)
     {
+        if (!confirm('Are you sure you want to delete this product?')) return;
+
         this.productsAdminService.deleteProduct(id).subscribe({
-            next: (result) => {
+            next: () => {
+                this.toastr.success('Product deleted successfully');
                 this.loadProducts();
             },
             error: (err) => {
                 console.error('Error deleting product:', err);
+                this.toastr.error('Failed to delete product');
             },
         });
 

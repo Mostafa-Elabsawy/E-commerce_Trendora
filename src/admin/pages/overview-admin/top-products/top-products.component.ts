@@ -1,6 +1,7 @@
-import { Component, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { DashboardTopProducts } from '../../../../core/models/Admin/overview.interface';
 import { CurrencyPipe } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-top-products',
@@ -11,7 +12,8 @@ import { CurrencyPipe } from '@angular/common';
 })
 export class TopProductsComponent {
   products = input.required<DashboardTopProducts[]>();
+  router=inject(Router);
   viewProduct(ProductId: number) {
-    console.log(ProductId);
+    this.router.navigate(['/admin/products/view', ProductId]);
   }
 }

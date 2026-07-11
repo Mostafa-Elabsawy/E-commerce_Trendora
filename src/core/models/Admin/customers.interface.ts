@@ -33,6 +33,12 @@ export interface CustomerStatsDTO {
   totalOrders: number;
   totalSpend: number;
 }
+export interface CreateCustomerRequest {
+  displayName: string;
+  email: string;
+  password: string;
+  phoneNumber?: string;
+}
 export type OrderStatus =
   | 'Pending'
   | 'PaymentReceived'
