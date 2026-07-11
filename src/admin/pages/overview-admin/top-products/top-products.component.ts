@@ -13,6 +13,12 @@ import { Router } from '@angular/router';
 export class TopProductsComponent {
   products = input.required<DashboardTopProducts[]>();
   router=inject(Router);
+  failedImages = new Set<number>();
+
+  onImgError(productId: number) {
+    this.failedImages.add(productId);
+  }
+
   viewProduct(ProductId: number) {
     this.router.navigate(['/admin/products/view', ProductId]);
   }

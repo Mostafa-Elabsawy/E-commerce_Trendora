@@ -1,10 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, tap } from 'rxjs';
-import { ActivatedRoute, Router, Routes } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../environments/environment.prod';
-import { IUserData } from '../models/userData.interface';
-import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root',
@@ -15,12 +13,23 @@ export class AuthService {
     private _router: Router,
     private _activatedRoute: ActivatedRoute
   ) {
+    const storedUser = this.getStoredUser();
+    if (storedUser) {
+      this.isAuth.next(storedUser);
+    }
+    const storedRole = this.getStoredRole();
+    if (storedRole) {
+      this.roleSubject.next(storedRole);
+    }
   }
   private isAuth = new BehaviorSubject<any | null>(null);
   public isAuth$ = this.isAuth.asObservable();
   private url = environment.apiURL + 'Authentication';
   private token_key = 'token';
   private user_key = 'user';
+  private role_key = 'role';
+  private roleSubject = new BehaviorSubject<string | null>(null);
+  public role$ = this.roleSubject.asObservable();
 
 
   register(data: any) {
@@ -30,10 +39,9 @@ export class AuthService {
         const token = res.token
         if (token) {
           this.storeToken(token);
-          const decode = this.decodeToken(token);
-          if (decode) {
-            this.storeUser(decode);
-          }
+          this.storeUser(res);
+          this.storeRole(res.role);
+          this.roleSubject.next(res.role);
           this._router.navigate(['/login']);
         }
       })
@@ -46,19 +54,15 @@ export class AuthService {
         const token = res.token
         if (token) {
           this.storeToken(token);
-          const decode = this.decodeToken(token);
-          if (decode) {
-            this.storeUser(decode);
-            this.isAuth.next(decode);
+          this.storeUser(res);
+          this.storeRole(res.role);
+          this.isAuth.next(res);
+          this.roleSubject.next(res.role);
 
-            if (decode?.role) {
-
-              if (decode.role === 'Admin') {
-                this._router.navigate(['/admin']);
-              } else {
-                this._router.navigate(['/home']);
-              }
-            }
+          if (res.role === 'Admin') {
+            this._router.navigate(['/admin']);
+          } else {
+            this._router.navigate(['/home']);
           }
         }
       })
@@ -67,13 +71,8 @@ export class AuthService {
 
 
 
-  isLoggedin(): IUserData | null {
-    const token = this.getToken();
-    if (token) {
-      const decode = this.decodeToken(token);
-      return decode;
-    }
-    return null;
+  isLoggedin(): any {
+    return this.getStoredUser();
   }
   isUserLoggedin(): boolean {
     const token = this.getToken();
@@ -86,20 +85,22 @@ export class AuthService {
   logout() {
     localStorage.removeItem(this.token_key);
     localStorage.removeItem(this.user_key);
+    localStorage.removeItem(this.role_key);
     this.isAuth.next(null);
+    this.roleSubject.next(null);
 
     console.log('User logged out');
 
     this._router.navigate(['/login']);
   }
 
-  private storeUser(user: IUserData): void {
+  private storeUser(user: any): void {
     if (localStorage) {
       localStorage.setItem(this.user_key, JSON.stringify(user));
     }
   }
 
-  getStoredUser(): IUserData | null {
+  getStoredUser(): any {
     try {
       const userData = localStorage.getItem(this.user_key);
       return userData ? JSON.parse(userData) : null;
@@ -109,24 +110,14 @@ export class AuthService {
     }
   }
 
-
-
-  private decodeToken(token: string): IUserData | null {
-    try {
-      const decode = jwtDecode<IUserData>(token);
-      if (!decode) {
-        return null;
-      }
-      if (decode.exp) {
-        const expiry = decode.exp * 1000;
-        if (expiry > Date.now()) {
-          return decode;
-        }
-      }
-      return null;
-    } catch (err) {
-      return null;
+  private storeRole(role: string): void {
+    if (localStorage) {
+      localStorage.setItem(this.role_key, role);
     }
+  }
+
+  getStoredRole(): string | null {
+    return localStorage.getItem(this.role_key);
   }
 
   private storeToken(token: string) {

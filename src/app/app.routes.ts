@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from '../core/guards/auth.guard';
 import { AboutComponent } from '../features/about/about.component';
 import { ContactComponent } from '../features/contact/contact.component';
 import { RegisterComponent } from '../core/Auth/register/register.component';
@@ -22,14 +23,9 @@ import { CustomersListComponent } from '../admin/pages/customers-admin/customers
 import { EditProductComponent } from '../admin/pages/products-admin/edit-product/edit-product.component';
 import { ProfileComponent } from '../features/profile/profile.component';
 import { ViewProductComponent } from '../admin/pages/products-admin/view-product/view-product.component';
-
+import { NotFoundComponent } from '../features/not-found/not-found.component';
 
 export const routes: Routes = [
-  {
-    path:'',
-    redirectTo:'/admin/customers',
-    pathMatch:'full'
-  },
    {
     path: '',
     component: MainComponent,
@@ -51,6 +47,7 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: AdminMainComponent,
+    canActivate: [authGuard],
     children: [
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
       { path: 'overview', component: OverviewAdminComponent },
@@ -84,4 +81,5 @@ export const routes: Routes = [
       },
     ],
   },
+  { path: '**', component: NotFoundComponent },
 ];
