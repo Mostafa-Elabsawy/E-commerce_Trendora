@@ -1,38 +1,45 @@
-<div class="max-w-6xl mx-auto px-4 pt-16 pb-8">
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr] gap-12 mb-12">
+<footer class="bg-gray-50 border-t border-gray-200">
+  <div class="max-w-7xl mx-auto px-6 pt-20 pb-10">
     
-    <div class="flex flex-col gap-5">
-      <div class="flex items-center">
-        <img src="assets/frontend_assets/logo.png" alt="Forever Logo" class="h-8 w-auto object-contain" />
+    <!-- Main Footer Content -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr] gap-16 mb-16">
+      
+      <!-- Brand Section -->
+      <div class="flex flex-col gap-6">
+        <a routerLink="/" class="text-3xl font-extrabold tracking-tight text-gray-900">Trendora</a>
+        <p class="text-gray-600 text-sm leading-relaxed max-w-sm">
+          Elevating your shopping experience with curated trends. We combine quality, style, and efficiency to bring the best products directly to your doorstep.
+        </p>
       </div>
-      <p class="text-gray-500 text-sm leading-relaxed max-w-md">
-        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-      </p>
+
+      <!-- Company Links -->
+      <div>
+        <h4 class="text-gray-900 font-semibold text-sm tracking-widest uppercase mb-6">Company</h4>
+        <ul class="flex flex-col gap-3 text-sm text-gray-600">
+          <li><a routerLink="/" class="hover:text-blue-600 hover:translate-x-1 transition-all duration-300">Home</a></li>
+          <li><a routerLink="/about" class="hover:text-blue-600 hover:translate-x-1 transition-all duration-300">About us</a></li>
+          <li><a routerLink="/" class="hover:text-blue-600 hover:translate-x-1 transition-all duration-300">Delivery</a></li>
+          <li><a routerLink="/" class="hover:text-blue-600 hover:translate-x-1 transition-all duration-300">Privacy Policy</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact Info -->
+      <div>
+        <h4 class="text-gray-900 font-semibold text-sm tracking-widest uppercase mb-6">Get in Touch</h4>
+        <ul class="flex flex-col gap-3 text-sm text-gray-600">
+          <li class="flex items-center gap-2 hover:text-gray-900 transition-colors">
+            <span>📞</span> +1-212-456-7890
+          </li>
+          <li class="flex items-center gap-2 hover:text-gray-900 transition-colors">
+            <span>✉️</span> greatstackdev@gmail.com
+          </li>
+        </ul>
+      </div>
     </div>
 
-    <div class="lg:pl-12">
-      <h4 class="text-gray-800 font-medium text-sm tracking-wider uppercase mb-5">COMPANY</h4>
-      <ul class="flex flex-col gap-2.5 text-gray-500 text-sm">
-        <li><a routerLink="/" class="hover:text-gray-800 transition-colors">Home</a></li>
-        <li><a routerLink="/about" class="hover:text-gray-800 transition-colors">About us</a></li>
-        <li><a routerLink="/" class="hover:text-gray-800 transition-colors">Delivery</a></li>
-        <li><a routerLink="/" class="hover:text-gray-800 transition-colors">Privacy policy</a></li>
-      </ul>
+    <!-- Bottom Bar -->
+    <div class="border-t border-gray-200 pt-8 text-center text-sm text-gray-500">
+      <p>&copy; 2026 Trendora. All rights reserved.</p>
     </div>
-
-    <div>
-      <h4 class="text-gray-800 font-medium text-sm tracking-wider uppercase mb-5">GET IN TOUCH</h4>
-      <ul class="flex flex-col gap-2.5 text-gray-500 text-sm">
-        <li class="hover:text-gray-800 transition-colors">+1-212-456-7890</li>
-        <li class="hover:text-gray-800 transition-colors">greatstackdev@gmail.com</li>
-      </ul>
-    </div>
-
   </div>
-
-  <hr class="border-gray-200" />
-
-  <div class="py-6 text-center text-xs md:text-sm text-gray-500">
-    Copyright 2026 © Trendora - All Right Reserved.
-  </div>
-</div>
+</footer>

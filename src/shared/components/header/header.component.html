@@ -1,72 +1,50 @@
-<header class="border-b">
+<header class="border-b w-[98%] mx-auto border-gray-300">
   <div class="flex justify-between items-center py-4 px-6">
-   <h1 class="font-bold text-2xl"><a routerLink="/">Trendora</a></h1>
-   
-    <nav class="hidden md:flex gap-6 font-medium">
+    <h1 class="font-bold text-2xl"><a routerLink="/">Trendora</a></h1>
+
+    <nav class="hidden md:flex gap-10 font-medium">
       <a routerLink="/" class="relative group">
         <span>Home</span>
-        <span
-          class="absolute left-0 -bottom-1 w-0 h-[2px] bg-gray-700 transition-all duration-300 group-hover:w-full"
-        ></span>
+        <span class="absolute left-0 -bottom-1 w-0 h-[2px] bg-gray-700 transition-all duration-300 group-hover:w-full"></span>
       </a>
 
       <a routerLink="/collection" class="relative group">
         <span>Collection</span>
-        <span
-          class="absolute left-0 -bottom-1 w-0 h-[2px] bg-gray-700 transition-all duration-300 group-hover:w-full"
-        ></span>
+        <span class="absolute left-0 -bottom-1 w-0 h-[2px] bg-gray-700 transition-all duration-300 group-hover:w-full"></span>
       </a>
 
       <a routerLink="/about" class="relative group">
         <span>About</span>
-        <span
-          class="absolute left-0 -bottom-1 w-0 h-[2px] bg-gray-700 transition-all duration-300 group-hover:w-full"
-        ></span>
+        <span class="absolute left-0 -bottom-1 w-0 h-[2px] bg-gray-700 transition-all duration-300 group-hover:w-full"></span>
       </a>
 
       <a routerLink="/contact" class="relative group">
         <span>Contact</span>
-        <span
-          class="absolute left-0 -bottom-1 w-0 h-[2px] bg-gray-700 transition-all duration-300 group-hover:w-full"
-        ></span>
+        <span class="absolute left-0 -bottom-1 w-0 h-[2px] bg-gray-700 transition-all duration-300 group-hover:w-full"></span>
       </a>
     </nav>
 
 
     <div class="flex gap-4 items-center">
-      <img
-        src="assets/frontend_assets/search_icon.png"
-        alt="Search"
-        class="w-6 h-6 cursor-pointer"
-      />
-
-      <a routerLink="/profile">
-        <img
-          src="assets/frontend_assets/profile_icon.png"
-          alt="Profile"
-          class="w-6 h-6 cursor-pointer"
-        />
-      </a>
-
-      <a class="cart" routerLink="/cart">
-        <img src="assets/frontend_assets/cart_icon.png" alt="Cart" class="w-6 h-6 cursor-pointer" />
-       @if(cartItemsCount() > 0) {
-         <span>{{ cartItemsCount() }}</span>
-       }
-      </a>
-
-      
-      <div class="hidden md:block ml-2">
+      <div class="hidden md:flex items-center gap-3">
         @if (isLoggedIn) {
-          <button (click)="logout()" class="inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold tracking-wider text-red-600 border border-red-200 rounded-full hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-300 cursor-pointer uppercase">
-            <i class="fas fa-sign-out-alt"></i>
-            Logout
-          </button>
+        <a routerLink="/profile" class="flex items-center gap-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors duration-300 px-4 py-2">
+          <i class="fa-solid fa-user text-gray-600 text-lg"></i>
+          <span class="text-sm font-medium text-gray-700 max-w-[120px] truncate">{{ userName }}</span>
+        </a>
+        <button (click)="logout()" class="inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold tracking-wider text-red-600 border border-red-200 rounded-md hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-300 cursor-pointer uppercase">
+          <i class="fas fa-sign-out-alt"></i>
+          Logout
+        </button>
         } @else {
-          <a routerLink="/login" class="inline-flex items-center gap-1.5 px-5 py-1.5 text-xs font-semibold tracking-wider text-black border border-black rounded-full hover:bg-black hover:text-white transition-all duration-300 uppercase">
-            <i class="fas fa-sign-in-alt"></i>
-            Login
-          </a>
+        <a routerLink="/register" class="inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold tracking-wider text-black border border-black rounded-md hover:bg-black hover:text-white transition-all duration-300 uppercase">
+          <i class="fas fa-user-plus"></i>
+          Sign Up
+        </a>
+        <a routerLink="/login" class="inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold tracking-wider text-white bg-black border border-black rounded-md hover:bg-gray-800 transition-all duration-300 uppercase">
+          <i class="fas fa-sign-in-alt"></i>
+          Login
+        </a>
         }
       </div>
 
@@ -74,28 +52,40 @@
     </div>
   </div>
 
+  <a routerLink="/cart" class="fixed bottom-6 right-6 z-50 flex items-center justify-center w-14 h-14 bg-black text-white rounded-full shadow-lg hover:bg-gray-800 transition-all duration-200 active:scale-95">
+    <i class="fa-solid fa-bag-shopping text-xl"></i>
+    @if(cartItemsCount() > 0) {
+    <span class="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full">{{ cartItemsCount() }}</span>
+    }
+  </a>
+
   @if (isMenuOpen) {
-    <nav class="md:hidden flex flex-col px-6 pb-6 gap-4 font-medium border-t pt-4">
-      <a routerLink="/" (click)="isMenuOpen = false">Home</a>
-      <a routerLink="/collection" (click)="isMenuOpen = false">Collection</a>
-      <a routerLink="/about" (click)="isMenuOpen = false">About</a>
-      <a routerLink="/contact" (click)="isMenuOpen = false">Contact</a>
-      <a routerLink="/profile" (click)="isMenuOpen = false">Profile</a>
-      <div class="border-t pt-4">
-        @if (isLoggedIn) {
-          <button (click)="logout(); isMenuOpen = false" class="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-red-600 border border-red-200 rounded-full hover:bg-red-600 hover:text-white transition-all duration-300 cursor-pointer">
-            <i class="fas fa-sign-out-alt"></i>
-            Logout
-          </button>
-        } @else {
-          <a routerLink="/login" (click)="isMenuOpen = false" class="block w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-black border border-black rounded-full hover:bg-black hover:text-white transition-all duration-300">
-            <i class="fas fa-sign-in-alt"></i>
-            Login
-          </a>
-        }
-      </div>
-    </nav>
+  <nav class="md:hidden flex flex-col px-6 pb-6 gap-4 font-medium border-t pt-4">
+    <a routerLink="/" (click)="isMenuOpen = false">Home</a>
+    <a routerLink="/collection" (click)="isMenuOpen = false">Collection</a>
+    <a routerLink="/about" (click)="isMenuOpen = false">About</a>
+    <a routerLink="/contact" (click)="isMenuOpen = false">Contact</a>
+    <div class="border-t pt-4 flex flex-col gap-3">
+      @if (isLoggedIn) {
+      <a routerLink="/profile" (click)="isMenuOpen = false" class="flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-black border border-black rounded-md hover:bg-black hover:text-white transition-all duration-300">
+        <i class="fa-solid fa-user"></i>
+        Profile
+      </a>
+      <button (click)="logout(); isMenuOpen = false" class="flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-red-600 border border-red-200 rounded-md hover:bg-red-600 hover:text-white transition-all duration-300 cursor-pointer">
+        <i class="fas fa-sign-out-alt"></i>
+        Logout
+      </button>
+      } @else {
+      <a routerLink="/register" (click)="isMenuOpen = false" class="flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-black border border-black rounded-md hover:bg-black hover:text-white transition-all duration-300">
+        <i class="fas fa-user-plus"></i>
+        Sign Up
+      </a>
+      <a routerLink="/login" (click)="isMenuOpen = false" class="flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-black border border-black rounded-md hover:bg-gray-800 transition-all duration-300">
+        <i class="fas fa-sign-in-alt"></i>
+        Login
+      </a>
+      }
+    </div>
+  </nav>
   }
 </header>
-
-

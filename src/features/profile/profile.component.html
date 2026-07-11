@@ -208,8 +208,6 @@
               <div class="rounded-[28px] bg-slate-50 p-6">
                 <p class="text-sm uppercase tracking-[0.24em] text-slate-500">Total orders</p>
                 <p class="mt-4 text-3xl font-semibold text-slate-900">{{ user.ordersCount }}</p>
-
-
               </div>
               <div class="rounded-[28px] bg-slate-50 p-6">
                 <p class="text-sm uppercase tracking-[0.24em] text-slate-500">Total cost</p>
@@ -217,19 +215,60 @@
               </div>
             </div>
 
-            <div class="mt-8 space-y-4">
+            <div class="mt-8 space-y-6">
               <p class="text-sm uppercase tracking-[0.24em] text-slate-500">Recent orders</p>
               @if (recentOrders.length > 0) {
-                @for (order of recentOrders; track $index) {
-                  <div class="rounded-3xl bg-slate-50 p-6 border border-slate-100 hover:border-slate-200 transition">
-                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-slate-200">
-                      <div>
-                        <p class="text-sm font-semibold text-slate-900">Order #{{ $index + 1 }}</p>
-                        <p class="mt-1 text-sm text-slate-500">{{ order.summary || 'Order summary' }}</p>
+                @for (order of recentOrders; track order.id) {
+                  <div class="rounded-3xl bg-white border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 px-6 py-4 bg-slate-50 border-b border-slate-200">
+                      <div class="flex items-center gap-4">
+                        <i class="fa-solid fa-receipt text-slate-400 text-xl"></i>
+                        <div>
+                          <p class="text-sm font-semibold text-slate-900">Order #{{ order.id }}</p>
+                          <p class="text-xs text-slate-500">{{ order.orderDate | date:'medium' }}</p>
+                        </div>
                       </div>
                       <div class="flex items-center gap-3">
-                        <span class="rounded-full bg-slate-200 px-3 py-1 text-xs font-semibold uppercase text-slate-700">Processing</span>
-                        <span class="text-base font-bold text-slate-900">{{ order.total | currency }}</span>
+                        <span class="rounded-full px-3 py-1 text-xs font-semibold uppercase"
+                          [class.bg-emerald-50]="order.status === 'Completed' || order.status === 'Delivered'"
+                          [class.text-emerald-700]="order.status === 'Completed' || order.status === 'Delivered'"
+                          [class.border]="order.status === 'Completed' || order.status === 'Delivered'"
+                          [class.border-emerald-200]="order.status === 'Completed' || order.status === 'Delivered'"
+                          [class.bg-amber-50]="order.status !== 'Completed' && order.status !== 'Delivered'"
+                          [class.text-amber-700]="order.status !== 'Completed' && order.status !== 'Delivered'"
+                          [class.border]="order.status !== 'Completed' && order.status !== 'Delivered'"
+                          [class.border-amber-200]="order.status !== 'Completed' && order.status !== 'Delivered'">
+                          {{ order.status }}
+                        </span>
+                        <span class="text-base font-bold text-slate-900">{{ order.total | currency:'EGP':'symbol':'1.0-0' }}</span>
+                      </div>
+                    </div>
+
+                    <div class="divide-y divide-slate-100">
+                      @for (item of order.items; track $index) {
+                        <div class="flex items-center gap-4 px-6 py-4">
+                          <div class="w-16 h-16 rounded-xl overflow-hidden bg-slate-100 border border-slate-200 flex items-center justify-center flex-shrink-0">
+                            @if (item.pictureUrl) {
+                              <img [src]="item.pictureUrl" [alt]="item.productName" class="w-full h-full object-cover" (error)="item.pictureUrl = ''">
+                            }
+                            @if (!item.pictureUrl) {
+                              <i class="fa-solid fa-shirt text-slate-400"></i>
+                            }
+                          </div>
+                          <div class="flex-1 min-w-0">
+                            <p class="text-sm font-semibold text-slate-900 truncate">{{ item.productName }}</p>
+                            <p class="text-xs text-slate-500 mt-0.5">Qty: {{ item.quantity }}</p>
+                          </div>
+                          <p class="text-sm font-semibold text-slate-900">{{ item.price * item.quantity | currency:'EGP':'symbol':'1.0-0' }}</p>
+                        </div>
+                      }
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row sm:justify-end gap-2 px-6 py-4 bg-slate-50 border-t border-slate-200 text-sm">
+                      <div class="flex items-center gap-6">
+                        <span class="text-slate-500">Subtotal: <strong class="text-slate-800">{{ order.subtotal | currency:'EGP':'symbol':'1.0-0' }}</strong></span>
+                        <span class="text-slate-500">Delivery: <strong class="text-slate-800">{{ order.deliveryCost | currency:'EGP':'symbol':'1.0-0' }}</strong></span>
+                        <span class="text-slate-900 font-bold">Total: {{ order.total | currency:'EGP':'symbol':'1.0-0' }}</span>
                       </div>
                     </div>
                   </div>
