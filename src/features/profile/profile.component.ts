@@ -77,7 +77,7 @@ export class ProfileComponent implements OnInit {
   private readonly _wishlistS = {
     wishlist$: new BehaviorSubject<IProduct[]>([]),
     removeFromWishlist: (productId: number): void => {
-      const currentItems = this._wishlistS.wishlist$.getValue().filter((item: IProduct) => item.Id !== productId);
+      const currentItems = this._wishlistS.wishlist$.getValue().filter((item: IProduct) => item.id !== productId);
       this._wishlistS.wishlist$.next(currentItems);
     },
   };

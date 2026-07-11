@@ -29,24 +29,24 @@ export class WishlistService {
   }
   addToWishlist(product: IProduct) {
     const current = this.wishlistSubject.value;
-    if (!current.some((item) => item.Id === product.Id)) {
+    if (!current.some((item) => item.id === product.id)) {
       const updated = [...current, product];
       this.wishlistSubject.next(updated);
       this.saveWishlist(updated);
     }
   }
-  removeFromWishlist(productId: number) {
+  removeFromWishlist(productid: number) {
     const current = this.wishlistSubject.value;
-    const updated = current.filter((item) => item.Id !== productId);
+    const updated = current.filter((item) => item.id !== productid);
     this.wishlistSubject.next(updated);
     this.saveWishlist(updated);
   }
-  isInWishlist(productId: number): boolean {
-    return this.wishlistSubject.value.some((item) => item.Id === productId);
+  isInWishlist(productid: number): boolean {
+    return this.wishlistSubject.value.some((item) => item.id === productid);
   }
   toggleWishlist(product: IProduct) {
-    if (this.isInWishlist(product.Id)) {
-      this.removeFromWishlist(product.Id);
+    if (this.isInWishlist(product.id)) {
+      this.removeFromWishlist(product.id);
     } else {
       this.addToWishlist(product);
     }
