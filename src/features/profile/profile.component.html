@@ -16,7 +16,8 @@
           </div>
           <div>
             <p class="text-sm text-slate-500">Welcome back</p>
-            <h2 class="text-xl font-semibold text-slate-900 truncate max-w-[180px]">{{ user.name }}</h2>          </div>
+            <h2 class="text-xl font-semibold text-slate-900">{{ user.name }}</h2>
+          </div>
         </div>
 
         <div class="mt-8 grid gap-3">
@@ -24,12 +25,12 @@
             <button
               type="button"
               (click)="setActiveTab(item.key)"
-              class="group flex w-full items-center rounded-2xl px-4 py-4 text-sm font-medium transition cursor-pointer"
+              class="group flex w-full items-center rounded-2xl px-4 py-4 text-sm font-medium transition"
               [class.bg-slate-100]="activeTab === item.key"
               [class.text-slate-900]="activeTab === item.key"
               [class.text-slate-600]="activeTab !== item.key"
             >
-              <i class="fa-solid mr-3 text-lg {{ item.icon }}"></i>
+              <span class="mr-3 text-lg">{{ item.icon }}</span>
               {{ item.label }}
             </button>
           }
@@ -47,10 +48,9 @@
 
         <button
           type="button"
-         (click)="logout()"
-          class="mt-3 flex w-full items-center justify-center gap-2 rounded-3xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white hover:bg-slate-800 cursor-pointer"
+          class="mt-3 flex w-full items-center justify-center gap-2 rounded-3xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white hover:bg-slate-800"
         >
-          <i class="fa-solid fa-right-from-bracket mr-1"></i>
+          <span>🔓</span>
           Logout
         </button>
       </div>
@@ -58,18 +58,7 @@
 
     <section class="space-y-6">
       <div class="rounded-[32px] border border-slate-200 bg-white p-8 shadow-sm">
-        <!-- Success & Error Messages -->
-        @if (successMessage) {
-          <div class="mb-6 rounded-2xl bg-emerald-50 border border-emerald-100 p-4 text-sm text-emerald-800 flex items-center">
-            <i class="fa-solid fa-circle-check mr-2 font-normal"></i> {{ successMessage }}
-          </div>
-        }
-        @if (errorMessage) {
-          <div class="mb-6 rounded-2xl bg-rose-50 border border-rose-100 p-4 text-sm text-rose-800 flex items-center">
-            <i class="fa-solid fa-circle-xmark mr-2 font-normal"></i> {{ errorMessage }}
-          </div>
-        }
-        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-8 pb-5 border-b border-slate-100">
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p class="text-sm uppercase tracking-[0.2em] text-slate-500">Account</p>
             <h2 class="mt-2 text-2xl font-semibold text-slate-900">
@@ -88,155 +77,80 @@
             </h2>
           </div>
 
-          @if (activeTab === 'profile') {
-            <button type="button" (click)="toggleEditPersonalInfo()" class="rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white hover:bg-slate-800 cursor-pointer">
-              {{ isEditingPersonalInfo ? 'Cancel' : 'Edit personal info' }}
-            </button>
-          }
-          @if (activeTab === 'addresses') {
-            <button type="button" (click)="toggleEditAddress()" class="rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white hover:bg-slate-800 cursor-pointer">
-              {{ isEditingAddress ? 'Cancel' : 'Edit address' }}
-            </button>
-          }
+          <div class="flex items-center gap-3">
+            @if (activeTab === 'profile') {
+              <button class="rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white hover:bg-slate-800">
+                Edit profile
+              </button>
+            }
+            @if (activeTab === 'addresses') {
+              <button class="rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white hover:bg-slate-800">
+                Edit addresses
+              </button>
+            }
+          </div>
         </div>
 
-        <div class="mt-2">
+        <div class="mt-8">
           @if (activeTab === 'profile') {
-            @if (isEditingPersonalInfo) {
-              <form [formGroup]="personalForm" (ngSubmit)="onSavePersonalInfo()" class="grid gap-4 sm:grid-cols-2">
-                <div>
-                  <label class="block text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Full name</label>
-                  <input type="text" formControlName="name" class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-slate-500" />
-                </div>
-                <div>
-                  <label class="block text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Email address</label>
-                  <input type="email" formControlName="email" class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-slate-500" />
-                </div>
-                <div>
-                  <label class="block text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Phone</label>
-                  <input type="text" formControlName="phone" class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-slate-500" />
-                </div>
-                <div class="flex items-end gap-3">
-                  <button type="submit" class="rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white hover:bg-slate-800 cursor-pointer">Save</button>
-                  <button type="button" (click)="toggleEditPersonalInfo()" class="rounded-full bg-slate-200 px-6 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-300 cursor-pointer">Cancel</button>
-                </div>
-              </form>
-            } @else {
-              <div class="grid gap-6 sm:grid-cols-2">
-                <div>
-                  <p class="text-sm font-medium text-slate-500">Full name</p>
-                  <p class="mt-2 text-base font-semibold text-slate-800">{{ user.name }}</p>
-                </div>
-                <div>
-                  <p class="text-sm font-medium text-slate-500">Email address</p>
-                  <p class="mt-2 text-base font-semibold text-slate-800">{{ user.email }}</p>
-                </div>
-                <div>
-                  <p class="text-sm font-medium text-slate-500">Phone</p>
-                  <p class="mt-2 text-base font-semibold text-slate-800">{{ user.phone }}</p>
-                </div>
-                <div>
-                  <p class="text-sm font-medium text-slate-700">Membership</p>
-                  <p class="mt-2 text-slate-600">Standard customer</p>
-                </div>
+            <div class="grid gap-6 sm:grid-cols-2">
+              <div>
+                <p class="text-sm font-medium text-slate-700">Full name</p>
+                <p class="mt-2 text-slate-600">{{ user.name }}</p>
               </div>
-            }
+              <div>
+                <p class="text-sm font-medium text-slate-700">Email address</p>
+                <p class="mt-2 text-slate-600">{{ user.email }}</p>
+              </div>
+              <div>
+                <p class="text-sm font-medium text-slate-700">Phone</p>
+                <p class="mt-2 text-slate-600">{{ user.phone }}</p>
+              </div>
+              <div>
+                <p class="text-sm font-medium text-slate-700">Date of birth</p>
+                <p class="mt-2 text-slate-600">{{ user.dob }}</p>
+              </div>
+            </div>
           }
 
           @if (activeTab === 'addresses') {
-             @if (!isEditingAddress) {
-              <div class="space-y-6">
-                <p class="text-sm uppercase tracking-[0.24em] text-slate-500">Saved address</p>
-                <div class="grid gap-4">
-                  @if (user.address) {
-                    <div class="rounded-3xl border border-slate-200 bg-slate-50 p-6 text-slate-700 space-y-2">
-                      <p class="text-base font-semibold text-slate-900">
-                        {{ user.address.firstName }} {{ user.address.lastName }}
-                      </p>
-                      <p class="text-sm"><span class="font-medium text-slate-500">Street:</span> {{ user.address.street }}</p>
-                      <p class="text-sm"><span class="font-medium text-slate-500">City:</span> {{ user.address.city }}</p>
-                      <p class="text-sm"><span class="font-medium text-slate-500">Country:</span> {{ user.address.country }}</p>
-                    </div>
-                  } @else {
-                    <div class="rounded-3xl border border-dashed border-slate-300 p-8 text-center text-slate-500 bg-slate-50">
-                      No shipping address saved. Click the edit button to add your shipping address details.
-                    </div>
-                  }
-                </div>
+            <div class="space-y-6">
+              <div class="flex items-center justify-between gap-4">
+                <p class="text-sm uppercase tracking-[0.24em] text-slate-500">Saved addresses</p>
               </div>
-              } @else {
-              <form [formGroup]="addressForm" (ngSubmit)="onSaveAddress()" class="space-y-6">
-                <p class="text-sm uppercase tracking-[0.24em] text-slate-500">Edit Address details</p>
-                <div class="grid gap-4 sm:grid-cols-2">
-                  <div>
-                    <label class="block text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">First Name</label>
-                    <input type="text" formControlName="firstName" class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-slate-500" />
+              <div class="grid gap-4">
+                @for (address of user.addresses; track address) {
+                  <div class="rounded-3xl border border-slate-200 bg-slate-50 p-5 text-slate-700">
+                    {{ address }}
                   </div>
-               <div>
-                    <label class="block text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Last Name</label>
-                    <input type="text" formControlName="lastName" class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-slate-500" />
-                  </div>
-                </div>
-                <div>
-                  <label class="block text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Street Address</label>
-                  <input type="text" formControlName="street" class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-slate-500" />
-                </div>
-                <div class="grid gap-4 sm:grid-cols-2">
-                  <div>
-                    <label class="block text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">City</label>
-                    <input type="text" formControlName="city" class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-slate-500" />
-                  </div>
-                  <div>
-                    <label class="block text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Country</label>
-                    <input type="text" formControlName="country" class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-slate-500" />
-                  </div>
-                </div>
-                <div class="flex gap-3 pt-2">
-                  <button type="submit" [disabled]="isLoading" class="rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white hover:bg-slate-800 disabled:opacity-50 cursor-pointer">
-                    {{ isLoading ? 'Saving...' : 'Save Changes' }}
-                  </button>
-                  <button type="button" (click)="toggleEditAddress()" class="rounded-full bg-slate-200 px-6 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-300 cursor-pointer">
-                    Cancel
-                  </button>
-                </div>
-              </form>
-            }
+                }
+              </div>
+            </div>
           }
 
           @if (activeTab === 'orders') {
             <div class="grid gap-6 sm:grid-cols-2">
               <div class="rounded-[28px] bg-slate-50 p-6">
                 <p class="text-sm uppercase tracking-[0.24em] text-slate-500">Total orders</p>
-                <p class="mt-4 text-3xl font-semibold text-slate-900">{{ user.ordersCount }}</p>
-
-
+                <p class="mt-4 text-3xl font-semibold text-slate-900">{{ user.orders }}</p>
               </div>
               <div class="rounded-[28px] bg-slate-50 p-6">
                 <p class="text-sm uppercase tracking-[0.24em] text-slate-500">Total cost</p>
-                <p class="mt-4 text-3xl font-semibold text-slate-900">{{ user.totalSpent | currency }}</p>
+                <p class="mt-4 text-3xl font-semibold text-slate-900">{{ user.spend }}</p>
               </div>
             </div>
 
             <div class="mt-8 space-y-4">
               <p class="text-sm uppercase tracking-[0.24em] text-slate-500">Recent orders</p>
-              @if (recentOrders.length > 0) {
-                @for (order of recentOrders; track $index) {
-                  <div class="rounded-3xl bg-slate-50 p-6 border border-slate-100 hover:border-slate-200 transition">
-                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-slate-200">
-                      <div>
-                        <p class="text-sm font-semibold text-slate-900">Order #{{ $index + 1 }}</p>
-                        <p class="mt-1 text-sm text-slate-500">Order summary</p>
-                      </div>
-                      <div class="flex items-center gap-3">
-                        <span class="rounded-full bg-slate-200 px-3 py-1 text-xs font-semibold uppercase text-slate-700">Processing</span>
-                        <span class="text-base font-bold text-slate-900">{{ order.total | currency }}</span>
-                      </div>
+              @for (order of recentOrders; track order.id) {
+                <div class="rounded-3xl bg-slate-50 p-5">
+                  <div class="flex items-center justify-between gap-4">
+                    <div>
+                      <p class="text-sm font-semibold text-slate-900">Order #{{ order.id }}</p>
+                      <p class="mt-1 text-sm text-slate-500">{{ order.date }} · {{ order.items }} items</p>
                     </div>
+                    <span class="rounded-full bg-slate-200 px-3 py-1 text-xs font-semibold uppercase text-slate-700">{{ order.status }}</span>
                   </div>
-                }
-              } @else {
-                <div class="rounded-3xl border border-dashed border-slate-300 p-8 text-center text-slate-500 bg-slate-50">
-                  You haven't placed any orders yet.
                 </div>
               }
             </div>
@@ -249,32 +163,19 @@
                   <p class="text-sm uppercase tracking-[0.24em] text-slate-500">Wishlist</p>
                   <p class="mt-2 text-slate-700">Saved items and requests</p>
                 </div>
-<span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase text-slate-700">{{ user.savedCount }} items</span>              </div>
+                <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase text-slate-700">{{ user.saved }} items</span>
+              </div>
 
               <div class="space-y-4">
-                @if (wishlistItems.length > 0) {
-                  @for (item of wishlistItems; track item.Id) {
-                    <div class="rounded-3xl border border-slate-200 bg-slate-50 p-5">
-                      <div class="flex items-center gap-4">
-                        @if (item.PictureUrl) {
-                          <img [src]="item.PictureUrl" alt="{{ item.Name }}" class="h-16 w-16 object-cover rounded-2xl border border-slate-200 bg-white" />
-                        }
-                        <div class="flex-1">
-                          <p class="font-semibold text-slate-900">{{ item.Name }}</p>
-                          <p class="mt-1 text-sm text-slate-500">{{ item.InStock ? 'Available' : 'Out of Stock' }}</p>
-                        </div>
-                        <div class="flex items-center gap-4">
-                          <p class="text-sm font-semibold text-slate-900">{{ item.Price | currency }}</p>
-                          <button type="button" (click)="removeFromWishlist(item.Id)" class="text-rose-500 hover:text-rose-700 font-medium text-sm cursor-pointer">
-                            Remove
-                          </button>
-                        </div>
+                @for (item of wishlistItems; track item.title) {
+                  <div class="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+                    <div class="flex items-center justify-between gap-4">
+                      <div>
+                        <p class="font-semibold text-slate-900">{{ item.title }}</p>
+                        <p class="mt-1 text-sm text-slate-500">{{ item.status }}</p>
                       </div>
+                      <p class="text-sm font-semibold text-slate-900">{{ item.price }}</p>
                     </div>
-                  }
-                } @else {
-                  <div class="rounded-3xl border border-dashed border-slate-300 p-8 text-center text-slate-500 bg-slate-50">
-                    Your wishlist is empty.
                   </div>
                 }
               </div>
