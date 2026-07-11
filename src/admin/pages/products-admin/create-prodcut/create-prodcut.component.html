@@ -1,0 +1,240 @@
+@if(state())
+{
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
+
+    <div class="w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white shadow-xl transition-all border border-slate-200">
+
+        <!-- Header -->
+        <header class="flex items-center justify-between border-b border-slate-100 px-6 py-4 bg-slate-50/50">
+
+            <div>
+                <h2 class="text-xl font-bold text-slate-900">
+                    Add New Product
+                </h2>
+
+                <p class="text-xs text-slate-500 mt-0.5">
+                    Register a fresh catalog item to your inventory matrix
+                </p>
+            </div>
+
+            <button type="button" (click)="closeModal()" class="group rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition">
+                <i class="fa-solid fa-xmark text-lg group-hover:scale-105 transition-transform"></i>
+            </button>
+
+        </header>
+
+        <!-- Form -->
+        <form [formGroup]="createForm">
+
+            <section class="p-6 space-y-6 overflow-y-auto max-h-[calc(100vh-200px)]">
+
+                <!-- Product Details -->
+                <div class="space-y-4">
+
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-indigo-600 border-b border-slate-100 pb-1">
+                        Product Details
+                    </h3>
+
+                    <div class="grid gap-4 grid-cols-1">
+
+                        <div>
+                            <label class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+                                Product Name
+                            </label>
+                            <input type="text" formControlName="name" placeholder="e.g. Wireless Mechanical Keyboard" class="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-sm outline-none transition focus:border-indigo-500 focus:bg-white" />
+                            @if(name.invalid && (name.touched||name.dirty) ) {
+                                <p class="mt-1 text-sm text-red-600">
+                                   <i class ="fa fa-solid fa-circle-exclamation"></i>
+                                   @if (name.errors?.['required']) { Product name is required. }
+                                   @if (name.errors?.['minlength']) { Product name must be at least 3 characters. }
+                                </p>
+                            }
+                        </div>
+
+                        <div>
+                            <label class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+                                Picture URL
+                            </label>
+                            <input type="url" formControlName="pictureUrl" placeholder="https://images.example.com/products/item.jpg" class="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-sm outline-none transition focus:border-indigo-500 focus:bg-white" />
+                            @if(pictureUrl.invalid && (pictureUrl.touched||pictureUrl.dirty) ) {
+                                <p class="mt-1 text-sm text-red-600">
+                                   <i class ="fa fa-solid fa-circle-exclamation"></i> Image URL is required.
+                                </p>
+                            }
+                            @if (imagePreview()) {
+                            <div class="mt-2 h-32 w-32 overflow-hidden rounded-lg border border-slate-200">
+                                <img [src]="imagePreview()" class="h-full w-full object-cover" />
+                            </div>
+                            }
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Categorization -->
+                <div class="space-y-4 pt-2">
+
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-indigo-600 border-b border-slate-100 pb-1">
+                        Categorization
+                    </h3>
+
+                    <div class="grid gap-4 grid-cols-2">
+
+                        <div>
+                            <label class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+                                Category
+                            </label>
+                            <select formControlName="categoryId" (change)="onCategoryChange()" class="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-sm outline-none transition focus:border-indigo-500 focus:bg-white">
+                                <option [ngValue]="null" disabled>Select Category</option>
+                                @for (item of categories(); track item.id) {
+                                <option [ngValue]="item.id">{{ item.name }}</option>
+                                }
+                            </select>
+                            @if(categoryId.invalid && (categoryId.touched||categoryId.dirty) ) {
+                                <p class="mt-1 text-sm text-red-600">
+                                   <i class ="fa fa-solid fa-circle-exclamation"></i> Category is required.
+                                </p>
+                            }
+                        </div>
+
+                        <div>
+                            <label class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+                                Sub Category
+                            </label>
+                            <select formControlName="subCategoryId" class="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-sm outline-none transition focus:border-indigo-500 focus:bg-white">
+                                <option [ngValue]="null" disabled>Select Sub Category</option>
+                                @for (item of filteredSubCategories(); track item.id) {
+                                <option [ngValue]="item.id">{{ item.name }}</option>
+                                }
+                            </select>
+                            @if(subCategoryId.invalid && (subCategoryId.touched||subCategoryId.dirty) ) {
+                                <p class="mt-1 text-sm text-red-600">
+                                   <i class ="fa fa-solid fa-circle-exclamation"></i> Sub category is required.
+                                </p>
+                            }
+                        </div>
+
+                        <div>
+                            <label class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+                                Brand
+                            </label>
+                            <select formControlName="brandId" class="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-sm outline-none transition focus:border-indigo-500 focus:bg-white">
+                                <option [ngValue]="null" disabled>Select Brand</option>
+                                @for (item of brands(); track item.id) {
+                                <option [ngValue]="item.id">{{ item.name }}</option>
+                                }
+                            </select>
+                            @if(brandId.invalid && (brandId.touched||brandId.dirty) ) {
+                                <p class="mt-1 text-sm text-red-600">
+                                   <i class ="fa fa-solid fa-circle-exclamation"></i> Brand is required.
+                                </p>
+                            }
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Stock & Pricing -->
+                <div class="space-y-4 pt-2">
+
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-indigo-600 border-b border-slate-100 pb-1">
+                        Stock & Pricing
+                    </h3>
+
+                    <div class="grid gap-4 md:grid-cols-3">
+
+                        <div>
+                            <label class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+                                Base Price ($)
+                            </label>
+                            <input type="number" formControlName="price" placeholder="99.99" step="0.01" class="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-sm outline-none transition focus:border-indigo-500 focus:bg-white" />
+                            @if(price.invalid && (price.touched||price.dirty) ) {
+                                <p class="mt-1 text-sm text-red-600">
+                                   <i class ="fa fa-solid fa-circle-exclamation"></i>
+                                   @if (price.errors?.['required']) { Price is required. }
+                                   @if (price.errors?.['min']) { Price cannot be negative. }
+                                </p>
+                            }
+                        </div>
+
+                        <div>
+                            <label class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+                                Discount Rate (%)
+                            </label>
+                            <input type="number" formControlName="discount" placeholder="0" min="0" max="100" class="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-sm outline-none transition focus:border-indigo-500 focus:bg-white" />
+                            @if(discount.invalid && (discount.touched||discount.dirty) ) {
+                                <p class="mt-1 text-sm text-red-600">
+                                   <i class ="fa fa-solid fa-circle-exclamation"></i>
+                                   @if (discount.errors?.['required']) { Discount is required. }
+                                   @if (discount.errors?.['min']) { Discount cannot be negative. }
+                                   @if (discount.errors?.['max']) { Discount cannot exceed 100%. }
+                                </p>
+                            }
+                        </div>
+
+                        <div>
+                            <label class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+                                Initial Stock Units
+                            </label>
+                            <input type="number" formControlName="stockQuantity" placeholder="50" min="0" class="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-sm outline-none transition focus:border-indigo-500 focus:bg-white" />
+                            @if(stockQuantity.invalid && (stockQuantity.touched||stockQuantity.dirty) ) {
+                                <p class="mt-1 text-sm text-red-600">
+                                   <i class ="fa fa-solid fa-circle-exclamation"></i>
+                                   @if (stockQuantity.errors?.['required']) { Stock quantity is required. }
+                                   @if (stockQuantity.errors?.['min']) { Stock cannot be negative. }
+                                </p>
+                            }
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Description -->
+                <div class="space-y-4 pt-2">
+
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-indigo-600 border-b border-slate-100 pb-1">
+                        Product Description
+                    </h3>
+
+                    <div>
+                        <label class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            Description
+                        </label>
+                        <textarea formControlName="description" rows="5" placeholder="Describe the product features and specifications..." class="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-indigo-500 focus:bg-white"></textarea>
+                        @if(description.invalid && (description.touched||description.dirty) ) {
+                            <p class="mt-1 text-sm text-red-600">
+                               <i class ="fa fa-solid fa-circle-exclamation"></i> Description is required.
+                            </p>
+                        }
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- Footer -->
+            <footer class="flex flex-col-reverse gap-3 border-t border-slate-100 bg-slate-50 px-6 py-4 sm:flex-row sm:justify-end">
+
+                <button (click)="closeModal()" type="button" class="rounded-lg border border-slate-200 bg-white px-5 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100">
+                    Cancel
+                </button>
+
+                <button type="button" (click)="save()" [disabled]="createForm.invalid || saving()" class="rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-indigo-700 disabled:opacity-50">
+                    @if (!saving()) {
+                    <i class="fa-solid fa-plus mr-2"></i> Create Product
+                    } @else {
+                    Creating...
+                    }
+                </button>
+
+            </footer>
+
+        </form>
+
+    </div>
+
+</div>
+}

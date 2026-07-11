@@ -1,11 +1,7 @@
 <header class="border-b">
   <div class="flex justify-between items-center py-4 px-6">
-    <!-- Logo -->
-    <div>
-      <img src="assets/frontend_assets/logo.png" alt="Company Logo" class="h-12 w-auto" />
-    </div>
-
-    <!-- Desktop Menu -->
+   <h1 class="font-bold text-2xl"><a routerLink="/">Trendora</a></h1>
+   
     <nav class="hidden md:flex gap-6 font-medium">
       <a routerLink="/" class="relative group">
         <span>Home</span>
@@ -36,7 +32,7 @@
       </a>
     </nav>
 
-    <!-- Icons -->
+
     <div class="flex gap-4 items-center">
       <img
         src="assets/frontend_assets/search_icon.png"
@@ -52,25 +48,54 @@
         />
       </a>
 
-      <a routerLink="/cart">
+      <a class="cart" routerLink="/cart">
         <img src="assets/frontend_assets/cart_icon.png" alt="Cart" class="w-6 h-6 cursor-pointer" />
+       @if(cartItemsCount() > 0) {
+         <span>{{ cartItemsCount() }}</span>
+       }
       </a>
 
-      <!-- Mobile Menu Button -->
+      
+      <div class="hidden md:block ml-2">
+        @if (isLoggedIn) {
+          <button (click)="logout()" class="inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold tracking-wider text-red-600 border border-red-200 rounded-full hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-300 cursor-pointer uppercase">
+            <i class="fas fa-sign-out-alt"></i>
+            Logout
+          </button>
+        } @else {
+          <a routerLink="/login" class="inline-flex items-center gap-1.5 px-5 py-1.5 text-xs font-semibold tracking-wider text-black border border-black rounded-full hover:bg-black hover:text-white transition-all duration-300 uppercase">
+            <i class="fas fa-sign-in-alt"></i>
+            Login
+          </a>
+        }
+      </div>
+
       <button class="md:hidden" (click)="isMenuOpen = !isMenuOpen">☰</button>
     </div>
   </div>
 
-  <!-- Mobile Menu -->
   @if (isMenuOpen) {
-    <nav class="md:hidden flex flex-col px-6 pb-4 gap-4 font-medium">
+    <nav class="md:hidden flex flex-col px-6 pb-6 gap-4 font-medium border-t pt-4">
       <a routerLink="/" (click)="isMenuOpen = false">Home</a>
       <a routerLink="/collection" (click)="isMenuOpen = false">Collection</a>
       <a routerLink="/about" (click)="isMenuOpen = false">About</a>
       <a routerLink="/contact" (click)="isMenuOpen = false">Contact</a>
       <a routerLink="/profile" (click)="isMenuOpen = false">Profile</a>
+      <div class="border-t pt-4">
+        @if (isLoggedIn) {
+          <button (click)="logout(); isMenuOpen = false" class="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-red-600 border border-red-200 rounded-full hover:bg-red-600 hover:text-white transition-all duration-300 cursor-pointer">
+            <i class="fas fa-sign-out-alt"></i>
+            Logout
+          </button>
+        } @else {
+          <a routerLink="/login" (click)="isMenuOpen = false" class="block w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-black border border-black rounded-full hover:bg-black hover:text-white transition-all duration-300">
+            <i class="fas fa-sign-in-alt"></i>
+            Login
+          </a>
+        }
+      </div>
     </nav>
   }
 </header>
 
-<app-mega-menu></app-mega-menu>
+

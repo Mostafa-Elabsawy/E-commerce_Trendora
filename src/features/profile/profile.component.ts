@@ -1,56 +1,35 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { BehaviorSubject, of } from 'rxjs';
-import { IProduct } from '../../core/models/product.interface';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment';
-import { IAddress } from './models/address.interface';
-import { IOrder } from './models/order.interface';
-import { IUserProfile } from './models/user-profile.interface';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css',
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent {
   public activeTab = 'profile';
-  public isEditingAddress = false;
-  public isEditingPersonalInfo = false;
-  public isLoading = false;
-  public successMessage = '';
-  public errorMessage = '';
 
-  public personalForm = new FormGroup({
-    name: new FormControl('', [Validators.required]),
-    email: new FormControl('', [Validators.required, Validators.email]),
-    phone: new FormControl('', [Validators.required]),
-  });
-  
-  public user: IUserProfile = {
-    initials: '',
-    name: '',
-    email: '',
-    phone: '',
-    address: null,
-    ordersCount: 0,
-    savedCount: 0,
-    totalSpent: 0,
+  public user = {
+    initials: 'JD',
+    name: 'John Doe',
+    email: 'johndoe@gmail.com',
+    phone: '+1 555 123 4567',
+    dob: 'Jan 12, 1990',
+    addresses: [
+      '123 Maple Street, New York, NY',
+      'Apartment 4B, 456 Oak Avenue, San Francisco, CA',
+    ],
+    orders: 28,
+    saved: 12,
+    spend: '$4,860',
   };
 
   public menuItems = [
-    { key: 'profile', label: 'Profile Details', icon: 'fa-user' },
-    { key: 'addresses', label: 'Addresses', icon: 'fa-location-dot' },
-    { key: 'orders', label: 'Orders', icon: 'fa-box' },
-    { key: 'wishlist', label: 'Wishlist', icon: 'fa-heart' },
+    { key: 'profile', label: 'Profile', icon: '👤' },
+    { key: 'addresses', label: 'Addresses', icon: '📍' },
+    { key: 'orders', label: 'Orders', icon: '📦' },
+    { key: 'wishlist', label: 'Wishlist', icon: '❤️' },
   ];
-  
-  public recentOrders: IOrder[] = [];
-  public wishlistItems: IProduct[] = [];
 
   private readonly _authS = {
     isUserLoggedin: (): boolean => Boolean(localStorage.getItem('authToken') || localStorage.getItem('user')),
@@ -216,79 +195,5 @@ export class ProfileComponent implements OnInit {
   }
   public setActiveTab(tab: string) {
     this.activeTab = tab;
-    this.isEditingAddress = false;
-    this.isEditingPersonalInfo = false;
-    this.clearMessages();
-  }
-  public toggleEditAddress() {
-    this.isEditingAddress = !this.isEditingAddress;
-    this.clearMessages();
-    if (this.isEditingAddress && this.user.address) {
-      this.patchAddressForm(this.user.address);
-    }
-  }
-  public toggleEditPersonalInfo() {
-    this.isEditingPersonalInfo = !this.isEditingPersonalInfo;
-    this.clearMessages();
-    if (this.isEditingPersonalInfo) {
-      this.personalForm.patchValue({
-        name: this.user.name,
-        email: this.user.email,
-        phone: this.user.phone,
-      });
-    }
-  }
-  public onSavePersonalInfo() {
-    if (this.personalForm.invalid) {
-      this.errorMessage = 'Please fill out all fields correctly.';
-      return;
-    }
-    this.isLoading = true;
-    this.clearMessages();
-    const formValue = this.personalForm.value as { name: string; email: string; phone: string };
-    this.user.name = formValue.name;
-    this.user.email = formValue.email;
-    this.user.phone = formValue.phone;
-    this.user.initials = this.getInitials(this.user.name);
-    this.isEditingPersonalInfo = false;
-    this.isLoading = false;
-    this.successMessage = 'Personal information updated successfully!';
-    setTimeout(() => this.clearMessages(), 3000);
-  }
-  public onSaveAddress() {
-    if (this.addressForm.invalid) {
-      this.errorMessage = 'Please fill out all fields correctly.';
-      return;
-    }
-    this.isLoading = true;
-    this.clearMessages();
-    const addressData: IAddress = this.addressForm.value as IAddress;
-    this._authS.updateAddress(addressData).subscribe({
-      next: (res) => {
-        this.user.address = res;
-        this.isEditingAddress = false;
-        this.isLoading = false;
-        this.successMessage = 'Address updated successfully!';
-        setTimeout(() => this.clearMessages(), 3000);
-      },
-      error: (err) => {
-        console.error('Error saving address:', err);
-        this.errorMessage = 'Failed to update address. Please try again.';
-        this.isLoading = false;
-      }
-    });
-  }
-  public removeFromWishlist(productId: number) {
-    this._wishlistS.removeFromWishlist(productId);
-    this.successMessage = 'Item removed from wishlist.';
-    setTimeout(() => this.clearMessages(), 2000);
-  }
-  public logout() {
-    this._authS.logout();
-    this._router.navigate(['/login']);
-  }
-  private clearMessages() {
-    this.successMessage = '';
-    this.errorMessage = '';
   }
 }

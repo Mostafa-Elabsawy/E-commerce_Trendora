@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { debounceTime } from 'rxjs';
 import { Router, RouterLink } from '@angular/router';
-import { environment } from '../../../environments/environment';
+import { AuthService } from '../../services/auth.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-log-in',
@@ -11,8 +12,11 @@ import { environment } from '../../../environments/environment';
   styleUrl: './log-in.component.css',
 })
 export class LogInComponent {
-  public errorMessage = '';
-  public isSubmitting = false;
+  constructor(
+    private _authS: AuthService,
+    private router: Router,
+    private toastr: ToastrService
+  ) { }
 
   email = new FormControl('', {
     nonNullable: true,
@@ -30,44 +34,21 @@ export class LogInComponent {
   constructor(private _router: Router, private _http: HttpClient) {}
 
   onSubmit() {
-    if (this.loginForm.invalid) {
-      this.loginForm.markAllAsTouched();
-      this.errorMessage = 'Please enter a valid email and password.';
-      return;
+    if (this.loginForm.valid) {
+      let data = this.loginForm.getRawValue();
+      this.login(data);
     }
+  }
 
-    const formValue = this.loginForm.getRawValue();
-    const email = formValue.email?.trim().toLowerCase() ?? '';
-    const password = formValue.password?.trim() ?? '';
-
-    this.isSubmitting = true;
-    this.errorMessage = '';
-
-    this._http.post<any>(this.getApiUrl('Authentication/login'), { email, password }).subscribe({
-      next: (res) => {
-        const authToken = res?.token || res?.accessToken || res?.authToken || `demo-token-${Date.now()}`;
-        const storedUser = {
-          name: res?.name || res?.displayName || res?.userName || email.split('@')[0] || 'Valued Customer',
-          email,
-          phone: res?.phone || res?.phoneNumber || 'Not provided',
-          role: res?.role || 'customer',
-        };
-
-        localStorage.setItem('authToken', authToken);
-        localStorage.setItem('user', JSON.stringify(storedUser));
-        this._router.navigate(['/profile']);
+  login(data: any) {
+    this._authS.login(data).subscribe({
+      next: (res: any) => {
+        console.log('Login successful:', res);
+        this.toastr.success('Logged in successfully!');
+        this.router.navigate(['/']);
       },
-      error: () => {
-        const fallbackUser = {
-          name: email.split('@')[0] || 'Valued Customer',
-          email,
-          phone: 'Not provided',
-          role: 'customer',
-        };
-
-        localStorage.setItem('authToken', `demo-token-${Date.now()}`);
-        localStorage.setItem('user', JSON.stringify(fallbackUser));
-        this._router.navigate(['/profile']);
+      error: (err) => {
+        console.error('Failed to login:', err);
       },
     });
   }
@@ -79,7 +60,7 @@ export class LogInComponent {
 
   ngAfterViewInit() {
     this.loginForm.valueChanges.subscribe(() => {
-      this.errorMessage = '';
-    });
+      console.log(this.loginForm.value);
+    })
   }
 }
