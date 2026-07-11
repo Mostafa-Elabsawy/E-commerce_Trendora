@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -13,6 +13,9 @@ export class OrdersService {
     private readonly http = inject(HttpClient);
 
     private readonly baseUrl = `${environment.apiURL}Orders`;
+
+    selectedOrder = signal<OrderToReturnDTO | null>(null);
+
     getAllOrders(): Observable<OrderToReturnDTO[]> {
         return this.http.get<OrderToReturnDTO[]>(`${this.baseUrl}/all`);
     }

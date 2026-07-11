@@ -119,7 +119,7 @@
             </td>
 
             <td class="px-6 py-4 text-right">
-              <button [routerLink]="'/admin/orders/' + order.id"
+              <button (click)="viewOrder(order)"
                 class="rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 hover:text-black">
                 <i class="fa-solid fa-circle-info text-xl cursor-pointer"></i>
               </button>

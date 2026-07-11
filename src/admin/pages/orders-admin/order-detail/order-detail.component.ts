@@ -1,10 +1,9 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { OrdersService } from '../../../../core/services/Admin/orders.service';
 import { OrderToReturnDTO, OrderStatus } from '../../../../core/models/Admin/order.interface';
 import { ToastrService } from 'ngx-toastr';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-order-detail',
@@ -14,13 +13,15 @@ import Swal from 'sweetalert2';
 })
 export class OrderDetailComponent implements OnInit {
   private readonly ordersService = inject(OrdersService);
-  private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly toastr = inject(ToastrService);
+
+  @ViewChild('confirmDialog') confirmDialog!: ElementRef<HTMLDialogElement>;
 
   order = signal<OrderToReturnDTO | null>(null);
   loading = signal(false);
   isUpdating = signal(false);
+  pendingStatus = signal<OrderStatus | null>(null);
 
   readonly statusOptions: OrderStatus[] = [
     'Pending',
@@ -33,57 +34,47 @@ export class OrderDetailComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.loadOrder(id);
+    const selected = this.ordersService.selectedOrder();
+    if (selected) {
+      this.order.set(selected);
+    } else {
+      this.toastr.error('No order selected');
+      this.router.navigate(['/admin/orders']);
     }
   }
 
-  private loadOrder(id: string): void {
-    this.loading.set(true);
-    this.ordersService.getOrderById(id).subscribe({
-      next: (res) => {
-        this.order.set(res);
-        this.loading.set(false);
-      },
-      error: (err) => {
-        console.error('Failed to load order:', err);
-        this.toastr.error('Failed to load order details');
-        this.loading.set(false);
-      },
-    });
-  }
-
-  confirmStatusUpdate(newStatus: OrderStatus): void {
+  openConfirmDialog(newStatus: OrderStatus): void {
     const current = this.order();
     if (!current || current.status === newStatus) return;
 
-    Swal.fire({
-      title: 'Update Order Status',
-      text: `Change status from "${current.status}" to "${newStatus}"?`,
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonColor: '#4f46e5',
-      cancelButtonColor: '#64748b',
-      confirmButtonText: 'Yes, update',
-      cancelButtonText: 'Cancel',
-      reverseButtons: true,
-    }).then((result) => {
-      if (!result.isConfirmed) return;
+    this.pendingStatus.set(newStatus);
+    this.confirmDialog.nativeElement.showModal();
+  }
 
-      this.isUpdating.set(true);
-      this.ordersService.updateOrderStatus(current.id, newStatus).subscribe({
-        next: (updated) => {
-          this.order.set(updated);
-          this.toastr.success(`Order status updated to ${newStatus}`);
-          this.isUpdating.set(false);
-        },
-        error: (err) => {
-          console.error('Failed to update order status:', err);
-          this.toastr.error('Failed to update order status');
-          this.isUpdating.set(false);
-        },
-      });
+  closeConfirmDialog(): void {
+    this.confirmDialog.nativeElement.close();
+    this.pendingStatus.set(null);
+  }
+
+  confirmUpdate(): void {
+    const current = this.order();
+    const newStatus = this.pendingStatus();
+    if (!current || !newStatus) return;
+
+    this.isUpdating.set(true);
+    this.closeConfirmDialog();
+
+    this.ordersService.updateOrderStatus(current.id, newStatus).subscribe({
+      next: (updated) => {
+        this.order.set(updated);
+        this.toastr.success(`Order status updated to ${newStatus}`);
+        this.isUpdating.set(false);
+      },
+      error: (err) => {
+        console.error('Failed to update order status:', err);
+        this.toastr.error('Failed to update order status');
+        this.isUpdating.set(false);
+      },
     });
   }
 

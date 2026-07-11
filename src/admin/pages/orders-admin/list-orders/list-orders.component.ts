@@ -1,5 +1,5 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { OrdersService } from '../../../../core/services/Admin/orders.service';
 import { OrderToReturnDTO, OrderStatus } from '../../../../core/models/Admin/order.interface';
@@ -7,13 +7,19 @@ import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-list-orders',
-  imports: [RouterLink, DatePipe],
+  imports: [DatePipe],
   templateUrl: './list-orders.component.html',
   styleUrl: './list-orders.component.css',
 })
 export class ListOrdersComponent implements OnInit {
   private readonly ordersService = inject(OrdersService);
+  private readonly router = inject(Router);
   private readonly toastr = inject(ToastrService);
+
+  viewOrder(order: OrderToReturnDTO): void {
+    this.ordersService.selectedOrder.set(order);
+    this.router.navigate(['/admin/orders', order.id]);
+  }
 
   orders = signal<OrderToReturnDTO[]>([]);
   loading = signal(false);
