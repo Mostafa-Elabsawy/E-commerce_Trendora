@@ -1,23 +1,23 @@
 <div class="w-full bg-white border-b border-gray-200 relative font-sans">
   <div class="max-w-7xl mx-auto px-4 flex items-center gap-6 text-sm font-medium text-gray-700 h-14">
-    @for (category of categories(); track category.Id) {
+    @for (category of categories(); track category.id) {
     <div class="group h-full flex items-center">
       <button class="text-black font-semibold h-full px-1">
-        {{ category.Name }}
+        {{ category.name }}
       </button>
 
       <div
-        class="absolute left-0 top-14 w-full bg-white border-b border-gray-200 shadow-xl hidden group-hover:block z-50 transition-all">
+        class="absolute left-0 top-14 w-full bg-white border-b b    order-gray-200 shadow-xl hidden group-hover:block z-50 transition-all">
         <div class="max-w-7xl mx-auto px-6 py-8 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 text-left">
           @for (subCategory of subCategories(); track subCategory.Id) {
-          @if (subCategory.CategoryId === category.Id) {
+          @if (subCategory.CategoryId === category.id) {
           <div>
             <h5 class="font-bold text-gray-900 text-sm mb-3">{{ subCategory.Name }}</h5>
             <ul class="flex flex-col gap-2 text-xs text-gray-500">
-              @for (product of getProductsBySubCategory(subCategory.Name); track product.Id) {
+              @for (product of getProductsBySubCategory(subCategory.Name); track product.id) {
                 <li>
-                  <a [routerLink]="['/productDetails/', product.Id]" class="hover:text-black block truncate max-w-[150px]">
-                    {{ product.Name }}
+                  <a [routerLink]="['/productDetails/', product.id]" class="hover:text-black block truncate max-w-[150px]">
+                    {{ product.name }}
                   </a>
                 </li>
               } @empty {
