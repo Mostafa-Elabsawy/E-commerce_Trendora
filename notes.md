@@ -134,7 +134,7 @@ Trendora is a full-stack e-commerce platform that delivers a seamless online sho
 - Developed Category APIs
 - Developed Admin APIs
 
-# Slide 4 — Core Project Modules
+# Slide 4 — Project Features
 
 ## 🛒 Shopping Experience
 
