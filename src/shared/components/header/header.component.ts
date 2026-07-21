@@ -1,35 +1,44 @@
-import { Component, computed } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, computed, inject } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { CartService } from '../../../core/services/cart.service';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
-  selector: 'app-header',
-  imports: [RouterLink],
-  templateUrl: './header.component.html',
-  styleUrl: './header.component.css',
+    selector: 'app-header',
+    imports: [RouterLink],
+    templateUrl: './header.component.html',
+    styleUrl: './header.component.css',
 })
 export class HeaderComponent {
-  isMenuOpen = false;
+    isMenuOpen = false;
 
-  constructor(
-    private cartservice: CartService,
-    private authService: AuthService
-  ) { }
+    constructor(
+        private cartservice: CartService,
+        private authService: AuthService,
+        private router: Router
+    ) {}
 
-  cartItemsCount = computed(() => this.cartservice.cart()?.items.length ?? 0);
+    cartItemsCount = computed(() => this.cartservice.cart()?.items.length ?? 0);
 
-  get isLoggedIn(): boolean {
-    return this.authService.isUserLoggedin();
-  }
+    get isLoggedIn(): boolean {
+        return this.authService.isUserLoggedin();
+    }
 
-  get userName(): string {
-    const user = this.authService.getStoredUser();
-    return user?.displayName || user?.name || user?.email || '';
-  }
+    get userName(): string {
+        const user = this.authService.getStoredUser();
+        return user?.displayName || user?.name || user?.email || '';
+    }
 
-  logout(): void {
-    this.authService.logout();
-  }
+    logout(): void {
+        this.authService.logout();
+    }
+    toProfile() {
+
+      if (this.authService.getStoredRole()=='Admin'){
+        this.router.navigate(['/admin']);
+      }
+      else if(this.authService.getStoredRole()=='Customer'){
+        this.router.navigate(['/profile']);
+      }
+    }
 }
-

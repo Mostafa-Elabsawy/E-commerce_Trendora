@@ -28,7 +28,7 @@
     <div class="flex gap-4 items-center">
       <div class="hidden md:flex items-center gap-3">
         @if (isLoggedIn) {
-        <a routerLink="/profile" class="flex items-center gap-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors duration-300 px-4 py-2">
+        <a (click)="toProfile()" class="flex items-center gap-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors duration-300 px-4 py-2">
           <i class="fa-solid fa-user text-gray-600 text-lg"></i>
           <span class="text-sm font-medium text-gray-700 max-w-[120px] truncate">{{ userName }}</span>
         </a>
