@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, input } from '@angular/core';
-import { RouterLink } from "@angular/router";
+import { Component, inject, input } from '@angular/core';
+import { Router, RouterLink } from "@angular/router";
 import {OrderStatus} from '../../../../core/models/Admin/overview.interface';
 import { DashboardRecentOrders } from '../../../../core/models/Admin/overview.interface';
 
@@ -12,9 +12,9 @@ import { DashboardRecentOrders } from '../../../../core/models/Admin/overview.in
 })
 export class RecentOrdersComponent {
   public recentOrders = input.required<DashboardRecentOrders[]>();
-
+  router = inject(Router);
   public onViewOrderDetails(orderId: string): void {
-    console.log(`Inspecting deep logs for purchase target ID: ${orderId}`);
+    this.router.navigate([`/admin/orders/${orderId}`]);
   }
 }
 
