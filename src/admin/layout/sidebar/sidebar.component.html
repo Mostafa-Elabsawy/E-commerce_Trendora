@@ -42,13 +42,13 @@
 
     <div class="p-4 border-t border-gray-100 flex items-center justify-between">
         <div class="flex items-center space-x-3">
-            <div class="w-9 h-9 rounded-full bg-black flex items-center justify-center text-white font-semibold text-sm">JD</div>
+            <div class="w-9 h-9 rounded-full bg-black flex items-center justify-center text-white font-semibold text-sm">{{ adminInitials }}</div>
             <div>
-                <p class="text-sm font-semibold text-black">John Doe</p>
+                <p class="text-sm font-semibold text-black truncate max-w-[120px]">{{ adminName }}</p>
                 <p class="text-xs text-gray-400">Admin</p>
             </div>
         </div>
-        <button class="text-gray-400 hover:text-black transition-colors duration-200 text-lg px-2">
+        <button (click)="logout()" class="text-gray-400 hover:text-black transition-colors duration-200 text-lg px-2 cursor-pointer">
             <i class="fa-solid fa-right-from-bracket"></i>
         </button>
     </div>
